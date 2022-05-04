@@ -1,15 +1,40 @@
-const firebaseConfig = {
-    apiKey: "AIzaSyBnxIFmXshn0AMEtqV1-Fwz3bZOIiQfpnw",
-    authDomain: "alene-ef99f.firebaseapp.com",
-    projectId: "alene-ef99f",
-    storageBucket: "alene-ef99f.appspot.com",
-    messagingSenderId: "434544182339",
-    appId: "1:434544182339:web:f0385992b5fbbc01fd80f6",
-    measurementId: "G-1Q7M2DT7G5"
-  };
-firebase.initializeApp(firebaseConfig);
+import {saveTask, getUsu, onGetUsu, deleteTask} from './firebase.js'
 
-const db = firebase.firestore();
+const form = document.getElementById("task-form");
+const taskCont = document.getElementById('tasks-container');
+
+window.addEventListener('DOMContentLoaded', async () => {
+    onGetUsu((querySnapshot) => {
+        let html ='';
+        //Coger todos los datos de una lista
+        querySnapshot.forEach(doc =>{
+            const tarea = doc.data();
+            html += `
+                <div>
+                    <h3>${tarea.title}</h3>
+                    <p>${tarea.descripcion}</p>
+                    <button class='btn-delete' data-id="${doc.id}">Delete</button>
+                    <button class='btn-edit' data-id="${doc.id}">Edit</button>
+                </div>
+            
+            `
+        })
+
+        taskCont.innerHTML=html;
+
+        const btnDelete = taskCont.querySelectorAll('.btn-delete');
+        // borrar un dato de una lista
+        btnDelete.forEach(btn => {
+            btn.addEventListener('click', ({target:{dataset}}) => {
+                deleteTask(dataset.id);
+            })
+        })
+    })
+
+
+
+
+})
 
 const MSJOK = () =>{
     Swal.fire(
@@ -26,25 +51,15 @@ const MSJERROR = () =>{
         'error'
     )
 }
-``
 
-const form = document.getElementById("task-form");
-const but = document.getElementById("buttonSave");
 
 form.addEventListener('submit', e =>{
     e.preventDefault();
+
+    let nombre = form['Nombre'].value;
+    let apellido = form['Apellido'].value;
+
+    saveTask(nombre, apellido);
+
+    form.reset();
 })
-
-but.addEventListener('click', async (e) => {
-    let nombre = document.getElementById("Nombre").value;
-    let apellido = document.getElementById("Apellido").value;
-
-    const response = await db.collection('user').doc().set({
-        nombre,
-        apellido
-    })
-
-    console.log(response);
-
-    console.log(nombre, apellido);
-});
