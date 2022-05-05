@@ -35,35 +35,52 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 const db = getFirestore();
-var tabla = "";
 
 
-export const saveTask = (nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId) => {
-    addDoc(collection(db, tabla), { nombre:nombre,apellido: apellido,email: email,telefono: telf,direccion: dir,poblacion: pob,provincia: pro,ais: pais,usuario: usu,contrasenya: cont,id: numeroId})
+export const addPacDoc = (nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, idEspecialidad, esDoc, tabl) => {
+    if(esDoc){
+        addDoc(collection(db, tabl), { nombre:nombre,apellidos: apellido,email: email,telefono: telf,direccion: dir,poblacion: pob,provincia: pro,ais: pais,usuario: usu,contrasenya: cont,id: numeroId, idEspecialidad : idEspecialidad});
+    }else{
+        addDoc(collection(db, tabl), { nombre:nombre,apellidos: apellido,email: email,telefono: telf,direccion: dir,poblacion: pob,provincia: pro,ais: pais,usuario: usu,contrasenya: cont,id: numeroId});
+    }
+
 }
 
-export const getUsu = () =>{
-    getDocs(collection(db,tabla));
+/*export const getUsu = (tabl) =>{
+    getDocs(collection(db,tabl));
+}*/
+
+export const onGetPacientes = (callback) => {
+    onSnapshot(collection(db,"paciente"),callback);
+}
+export const onGetDoctores = (callback) => {
+    onSnapshot(collection(db,"doctor"),callback);
+}
+export const onGetRecepcionistas = (callback) => {
+    onSnapshot(collection(db,"recepcionista"),callback);
+}
+export const onGetEspecialidades = (callback) => {
+    onSnapshot(collection(db,"especialidad"),callback);
 }
 
-export const onGetUsu = (callback) => {
-    onSnapshot(collection(db,tabla),callback);
-}
-
-export const deleteTask = id => {
-    deleteDoc(doc(db, tabla, id));
+export const deleteTask = (id, tabl) => {
+    deleteDoc(doc(db, tabl, id));
 };
 
-var q = query(collection(db, "especialidad"), where( "id","==", 1));
+var q = null;
 
-export const getUsus = (callback) => {
+export const getOne = (tabl, id) => {
+    q = query(collection(db, tabl), where( "id","==", id))
+}
+
+export const getLastOf = (tabl) => {
+    q = query(collection(db, tabl), orderBy("id", "desc"), limit(1) );
+}
+
+
+export const getWithQ = (callback) => {
     onSnapshot(q, callback);
 }
-
-function tablaIs(tab){
-    tabla = tab;
-}
-
 
 
 
@@ -77,24 +94,24 @@ const form = document.getElementById("task-form");
 const taskCont = document.getElementById('tasks-container');
 
 window.addEventListener('DOMContentLoaded', async () => {
-    tablaIs("paciente");
-    q = query(collection(db, tabla), orderBy("id", "desc"), limit(1) );
+    getLastOf("paciente");
     var numeroId = 0;
-    getUsus((snapshot) => {
+    getWithQ((snapshot) => {
         snapshot.docs.forEach((doc) => {
             numeroId = doc.data().id +1;
             console.log(numeroId);
         })
     });
-    /*onGetUsu((querySnapshot) => {
+    onGetPacientes((querySnapshot) => {
         let html ='';
         //Coger todos los datos de una lista
         querySnapshot.forEach(doc =>{
-            const tarea = doc.data();
+            const paciente = doc.data();
             html += `
                 <div>
-                    <h3>${tarea.title}</h3>
-                    <p>${tarea.descripcion}</p>
+                    <h3>${paciente.nombre}</h3>
+                    <p>${paciente.apellidos}</p>
+                    <p>${paciente.id}</p>
                     <button class='btn-delete' data-id="${doc.id}">Delete</button>
                     <button class='btn-edit' data-id="${doc.id}">Edit</button>
                 </div>
@@ -108,10 +125,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         // borrar un dato de una lista
         btnDelete.forEach(btn => {
             btn.addEventListener('click', ({target:{dataset}}) => {
-                deleteTask(dataset.id);
+                deleteTask(dataset.id, "paciente");
             })
         })
-    })*/
+    })
 
 
 
@@ -135,7 +152,7 @@ const MSJERROR = () =>{
 }
 
 
-form.addEventListener('submit', e =>{
+form.addEventListener('submit', async (e) =>{
     e.preventDefault();
 
     let nombre = form['Nombre'].value;
@@ -148,15 +165,17 @@ form.addEventListener('submit', e =>{
     let pais = form['Pais'].value;
     let usu = form['Usuario'].value;
     let cont = form['Contrasenya'].value;
-    q = query(collection(db, tabla), orderBy("id", "desc"), limit(1) );
+
     var numeroId = 0;
-    getUsus((snapshot) => {
+    var coso = 0;
+    getLastOf("paciente");
+    getWithQ((snapshot) => {
         snapshot.docs.forEach((doc) => {
             numeroId = doc.data().id +1;
+            console.log(numeroId);
         })
-    });    
-    saveTask(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId);
-    console.log(numeroId);
+    });
+    addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, "a", false, "paciente");
     MSJOK();
     
 
