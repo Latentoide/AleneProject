@@ -151,7 +151,17 @@ const MSJERROR = () =>{
     )
 }
 
-
+var numeroId = 0;
+let nombre = null;
+    let apellido = null;
+    let email = null;
+    let telf = null;
+    let dir = null;
+    let pob = null;
+    let pro = null;
+    let pais = null;
+    let usu = null;
+    let cont = null;
 form.addEventListener('submit', async (e) =>{
     e.preventDefault();
 
@@ -166,18 +176,34 @@ form.addEventListener('submit', async (e) =>{
     let usu = form['Usuario'].value;
     let cont = form['Contrasenya'].value;
 
-    var numeroId = 0;
+ 
     var coso = 0;
     getLastOf("paciente");
-    getWithQ((snapshot) => {
+    getWithQ((snapshot) =>{
         snapshot.docs.forEach((doc) => {
             numeroId = doc.data().id +1;
             console.log(numeroId);
         })
     });
-    addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, "a", false, "paciente");
-    MSJOK();
-    
+    try{
+        addWithWait(20);
+    }catch{
+        MSJERROR();
+    }
 
-    form.reset();
+    function addWithWait(x) {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, "a", false, "paciente");
+            MSJOK(); 
+            resolve(x);
+          }, 2000);
+        });
+    }
+    form.reset()
 })
+
+
+
+
+
