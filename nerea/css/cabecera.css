@@ -1,0 +1,16 @@
+.navbar-brand img {
+    margin-top: -5px;
+    margin-bottom: -5px;
+    max-width: 60px;
+    max-height: 60px;
+}
+
+.space {
+    width: 70%;
+}
+
+.carousel-item img {
+    width: auto;
+    max-height: 450px;
+    object-fit: contain;
+}
