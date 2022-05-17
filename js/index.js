@@ -1,6 +1,5 @@
 
 // Import the functions you need from the SDKs you need
-import { password } from "./createPass";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-analytics.js";
 import { getFirestore, 
@@ -15,7 +14,7 @@ import { getFirestore,
     orderBy,
     limit 
  } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-firestore.js";
-
+ import { getAuth, sendEmailVerification, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -42,20 +41,11 @@ export const addPacDoc = (nombre, apellido, email, telf, dir, pob, pro, pais, us
     if(esDoc){
         addDoc(collection(db, tabl), { nombre:nombre,apellidos: apellido,email: email,telefono: telf,direccion: dir,poblacion: pob,provincia: pro,ais: pais,usuario: usu,contrasenya: cont,id: numeroId, idEspecialidad : idEspecialidad});
     }else{
-        if(tabl.normalize() === "paciente"){
-            addDoc(collection(db, tabl), { nombre:nombre,apellidos: apellido,email: email,telefono: telf,direccion: dir,poblacion: pob,provincia: pro,ais: pais,usuario: usu,contrasenya: cont,id: numeroId});
-        }else{
-            let usedContr = password();
-            addDoc(collection(db, tabl), { nombre:nombre,apellidos: apellido,email: email,telefono: telf,direccion: dir,poblacion: pob,provincia: pro,ais: pais,usuario: usu,contrasenya: usedContr,id: numeroId});
-        }
+        addDoc(collection(db, tabl), { nombre:nombre,apellidos: apellido,email: email,telefono: telf,direccion: dir,poblacion: pob,provincia: pro,ais: pais,usuario: usu,contrasenya: cont,id: numeroId});
         
     }
 
 }
-
-/*export const getUsu = (tabl) =>{
-    getDocs(collection(db,tabl));
-}*/
 
 export const onGetPacientes = (callback) => {
     onSnapshot(collection(db,"paciente"),callback);
@@ -101,45 +91,51 @@ const form = document.getElementById("task-form");
 const taskCont = document.getElementById('tasks-container');
 
 window.addEventListener('DOMContentLoaded', async () => {
-    getLastOf("paciente");
-    var numeroId = 0;
-    getWithQ((snapshot) => {
-        snapshot.docs.forEach((doc) => {
-            numeroId = doc.data().id +1;
-            console.log(numeroId);
-        })
-    });
-    onGetPacientes((querySnapshot) => {
-        let html ='';
-        //Coger todos los datos de una lista
-        querySnapshot.forEach(doc =>{
-            const paciente = doc.data();
-            html += `
-                <div>
-                    <h3>${paciente.nombre}</h3>
-                    <p>${paciente.apellidos}</p>
-                    <p>${paciente.id}</p>
-                    <button class='btn-delete' data-id="${doc.id}">Delete</button>
-                    <button class='btn-edit' data-id="${doc.id}">Edit</button>
-                </div>
-            
-            `
-        })
-
-        taskCont.innerHTML=html;
-
-        const btnDelete = taskCont.querySelectorAll('.btn-delete');
-        // borrar un dato de una lista
-        btnDelete.forEach(btn => {
-            btn.addEventListener('click', ({target:{dataset}}) => {
-                deleteTask(dataset.id, "paciente");
+    if(form.dataset == "paciente"){
+        getLastOf("paciente");
+        var numeroId = 0;
+        getWithQ((snapshot) => {
+            snapshot.docs.forEach((doc) => {
+                numeroId = doc.data().id +1;
+                console.log(numeroId);
+            })
+        });
+        onGetPacientes((querySnapshot) => {
+            let html ='';
+            //Coger todos los datos de una lista
+            querySnapshot.forEach(doc =>{
+                const paciente = doc.data();
+                html += `
+                    <div>
+                        <h3>${paciente.nombre}</h3>
+                        <p>${paciente.apellidos}</p>
+                        <p>${paciente.id}</p>
+                        <button class='btn-delete' data-id="${doc.id}">Delete</button>
+                        <button class='btn-edit' data-id="${doc.id}">Edit</button>
+                    </div>
+                `
+            })
+    
+            taskCont.innerHTML=html;
+    
+            const btnDelete = taskCont.querySelectorAll('.btn-delete');
+            // borrar un dato de una lista
+            btnDelete.forEach(btn => {
+                btn.addEventListener('click', ({target:{dataset}}) => {
+                    deleteTask(dataset.id, "paciente");
+                })
             })
         })
-    })
-
-
-
-
+    }else if(form.dataset.id === "recepcionista"){
+        getLastOf("recepcionista");
+        var numeroId = 0;
+        getWithQ((snapshot) => {
+            snapshot.docs.forEach((doc) => {
+                numeroId = doc.data().id +1;
+                console.log(numeroId);
+            })
+        });
+    }
 })
 
 const MSJOK = () =>{
@@ -171,46 +167,125 @@ let nombre = null;
     let cont = null;
 form.addEventListener('submit', async (e) =>{
     e.preventDefault();
-
-    let nombre = form['Nombre'].value;
-    let apellido = form['Apellido'].value;
-    let email = form['Email'].value;
-    let telf = form['Telefono'].value;
-    let dir = form['Direccion'].value;
-    let pob = form['Poblacion'].value;
-    let pro = form['Provincia'].value;
-    let pais = form['Pais'].value;
-    let usu = form['Usuario'].value;
-    let cont = form['Contrasenya'].value;
-
- 
-    var coso = 0;
-    getLastOf("paciente");
-    getWithQ((snapshot) =>{
-        snapshot.docs.forEach((doc) => {
-            numeroId = doc.data().id +1;
-            console.log(numeroId);
-        })
-    });
-    try{
-        addWithWait(20);
-    }catch{
-        MSJERROR();
+    if(form.dataset.id === "paciente" || form.dataset.id === "recepcionista"){
+        console.log(form.dataset.id);
+        nombre = form['nombre'].value;
+        apellido = form['apellido'].value;
+        email = form['email'].value;
+        telf = form['telefono'].value;
+        dir = form['direccion'].value;
+        pob = form['poblacion'].value;
+        pro = form['provincia'].value;
+        pais = form['pais'].value;
+        usu = form['usuario'].value;
+        if(form.dataset.id === "recepcionista"){
+            console.log("rec");
+            cont = passwordDoIt();
+            getLastOf("recepcionista");
+            getWithQ((snapshot) =>{
+                snapshot.docs.forEach((doc) => {
+                    numeroId = doc.data().id +1;
+                    register("recepcionista");
+                })
+            });
+        }else{
+            console.log("pac");
+            cont = form['contrasenya'].value;
+            contRep = form['cotnrasenyaRep'].value;
+            if(cont === contRep){
+                getLastOf("paciente");
+                getWithQ((snapshot) =>{
+                    snapshot.docs.forEach((doc) => {
+                        numeroId = doc.data().id +1;
+                        register("paciente");
+                    })
+                });
+            }
+        }
+        
+        form.reset()
     }
+    else if(form.dataset.id === "doctor"){
 
-    function addWithWait(x) {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, "a", false, "paciente");
-            MSJOK(); 
-            resolve(x);
-          }, 2000);
-        });
     }
-    form.reset()
 })
 
+async function register(tabl){
+    const auth = getAuth();
+            var user = null;
+            const credentialsuser = await createUserWithEmailAndPassword(auth, email, cont)
+            .then((userCredential) => {
+                user = userCredential.user;
+                MSJOK();
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                MSJERROR();
+            });
+            console.log(user);
+            await sendEmailVerification(user).then(() =>{
+                addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, 0, false, tabl);
+                //redirigir a la página buena
+            });
+}
 
 
 
 
+
+let simbolos = "$#_-.,'¿?!¡%&/()";
+let mayusculas = "ABCDEFGHIJKLMOPQRSTUVWXYZ";
+let minusculas = "abcdefghijklmnopqrsetuvwxyz";
+let numeros = "1234567890";
+
+let random = simbolos+mayusculas+minusculas+numeros;
+
+let haveMayus = false;
+let haveMinus = false;
+let havaNum = false;
+let haveSim = false;
+
+let theChar = '';
+let i = 0;
+
+let str = "";
+
+function passwordDoIt(){
+    do{
+        i = getRandomNum();
+        theChar = random.charAt(i);
+        if(simbolos.includes(theChar)){
+            haveSim = true;
+            i++;
+        }
+        if(mayusculas.includes(theChar)){
+            haveMayus = true;
+            i++;
+        }
+        if(minusculas.includes(theChar)){
+            haveMinus = true;
+            i++;
+        }
+        if(numeros.includes(theChar)){
+            havaNum = true;
+            i++;
+        }
+        str += theChar;
+        if(str.length > 9){
+            str ="";
+            theChar = '';
+            haveMayus = false;
+            haveMinus = false;
+            havaNum = false;
+            haveSim = false;
+        }
+    }while(str.length < 8 && (haveMayus = true) && (haveMinus = true) && (havaNum = true) && (haveSim = true));
+    console.log(str);
+    return str;
+}
+
+function getRandomNum(){
+    let u =Math.floor((Math.random()*(random.length-0+1)+0)) 
+    return u;
+}
