@@ -1,5 +1,6 @@
 
 // Import the functions you need from the SDKs you need
+import { password } from "./createPass";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-analytics.js";
 import { getFirestore, 
@@ -41,7 +42,13 @@ export const addPacDoc = (nombre, apellido, email, telf, dir, pob, pro, pais, us
     if(esDoc){
         addDoc(collection(db, tabl), { nombre:nombre,apellidos: apellido,email: email,telefono: telf,direccion: dir,poblacion: pob,provincia: pro,ais: pais,usuario: usu,contrasenya: cont,id: numeroId, idEspecialidad : idEspecialidad});
     }else{
-        addDoc(collection(db, tabl), { nombre:nombre,apellidos: apellido,email: email,telefono: telf,direccion: dir,poblacion: pob,provincia: pro,ais: pais,usuario: usu,contrasenya: cont,id: numeroId});
+        if(tabl.normalize() === "paciente"){
+            addDoc(collection(db, tabl), { nombre:nombre,apellidos: apellido,email: email,telefono: telf,direccion: dir,poblacion: pob,provincia: pro,ais: pais,usuario: usu,contrasenya: cont,id: numeroId});
+        }else{
+            let usedContr = password();
+            addDoc(collection(db, tabl), { nombre:nombre,apellidos: apellido,email: email,telefono: telf,direccion: dir,poblacion: pob,provincia: pro,ais: pais,usuario: usu,contrasenya: usedContr,id: numeroId});
+        }
+        
     }
 
 }
