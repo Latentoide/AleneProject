@@ -1,6 +1,6 @@
 .navbar-brand img {
-    margin-top: -5px;
-    margin-bottom: -5px;
+    margin-top: -15px;
+    margin-bottom: -15px;
     max-width: 60px;
     max-height: 60px;
 }
@@ -13,4 +13,20 @@
     width: auto;
     max-height: 450px;
     object-fit: contain;
+}
+
+.carousel {
+    background-color: gray;
+}
+
+.fixed-bottom {
+    background-color: #343a40;
+}
+
+.fixed-bottom a {
+    color: lightgray;
+}
+
+.fixed-bottom a:hover {
+    color: white;
 }
