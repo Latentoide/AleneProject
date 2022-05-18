@@ -1,0 +1,40 @@
+.carousel-item img {
+    width: auto;
+    max-height: 450px;
+    object-fit: contain;
+}
+
+.carousel {
+    background-color: gray;
+}
+
+.lead {
+    font-size: medium;
+}
+
+.txt-div {
+    padding-top: 15px;
+    padding-left: 25px;
+    padding-bottom: 15px;
+    padding-right: 5px;
+    width: 100%;
+    height: 400px;
+}
+
+.info-txt {
+    max-width: 250px;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.h4 {
+    text-align: center;
+}
+
+.cards {
+    padding-top: 25px;
+}
+
+.txt {
+    padding-top: 15px;
+}
