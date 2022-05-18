@@ -6,6 +6,8 @@ import { getFirestore,
     collection, 
     addDoc,
     getDocs,
+    getDoc,
+    updateDoc,
     deleteDoc,
     onSnapshot,
     doc,
@@ -47,6 +49,10 @@ export const addPacDoc = (nombre, apellido, email, telf, dir, pob, pro, pais, us
 
 }
 
+export const getTasks = () => getDocs(collection(db,tabl));
+
+export const getTask = id => getDoc(doc(db, tabl, id));
+
 export const onGetPacientes = (callback) => {
     onSnapshot(collection(db,"paciente"),callback);
 }
@@ -63,6 +69,8 @@ export const onGetEspecialidades = (callback) => {
 export const deleteTask = (id, tabl) => {
     deleteDoc(doc(db, tabl, id));
 };
+
+export const updateTask = (id, newFields) => updateDoc(doc(db, tabl, id), newFields);
 
 var q = null;
 
@@ -125,6 +133,20 @@ window.addEventListener('DOMContentLoaded', async () => {
                     deleteTask(dataset.id, "paciente");
                 })
             })
+
+            /*const btnEdit = taskCont.querySelectorAll('.btn-edit');
+            btnDelete.forEach(btn => {
+                btn.addEventListener('click', async  ({target:{dataset}}) => {
+                    const doc = await getTask(dataset.id);
+                    form['usuario'].value = doc.data.usuario;
+                    form['contrasenya'].value = doc.data.contrasenya;
+                    storeId = dataset.id;
+                    updateTask(storeId, {
+                        usario: form['usuario'].value;
+                        contrasenya : form['contrasenya'].value;
+                    })
+                })
+            })*/
         })
     }else if(form.dataset.id === "recepcionista"){
         getLastOf("recepcionista");
@@ -178,18 +200,20 @@ form.addEventListener('submit', async (e) =>{
         pro = form['provincia'].value;
         pais = form['pais'].value;
         usu = form['usuario'].value;
+
+
         if(form.dataset.id === "recepcionista"){
-            console.log("rec");
-            cont = passwordDoIt();
-            getLastOf("recepcionista");
-            getWithQ((snapshot) =>{
-                snapshot.docs.forEach((doc) => {
-                    numeroId = doc.data().id +1;
-                    register("recepcionista");
-                })
-            });
+            if(){ //no dejar que email y usuario esten repetidos aqui, funcion async para comprobar con una query, luego changePass recoger auth correcto
+                cont = passwordDoIt();
+                getLastOf("recepcionista");
+                getWithQ((snapshot) =>{
+                    snapshot.docs.forEach((doc) => {
+                        numeroId = doc.data().id +1;
+                        register("recepcionista");
+                    })
+                });
+            }
         }else{
-            console.log("pac");
             cont = form['contrasenya'].value;
             contRep = form['cotnrasenyaRep'].value;
             if(cont === contRep){
@@ -223,7 +247,6 @@ async function register(tabl){
                 const errorMessage = error.message;
                 MSJERROR();
             });
-            console.log(user);
             await sendEmailVerification(user).then(() =>{
                 addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, 0, false, tabl);
                 //redirigir a la página buena
