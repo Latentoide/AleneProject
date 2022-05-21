@@ -50,7 +50,7 @@ export const getOneUser = (tabl, usuario, contrasenya) => {
 
 
 const form = document.getElementById("buscar"); 
-const taskCont = document.getElementById("task-container");
+const taskCont = document.getElementById("task-form");
 
 window.addEventListener('DOMContentLoaded', e => {
     e.preventDefault();
@@ -58,8 +58,8 @@ window.addEventListener('DOMContentLoaded', e => {
 
 form.addEventListener("submit", async e => {
     e.preventDefault();
-    let usuario = form["Usuario"].value;
-    let contrasenya = form["Password"].value;
+    let usuario = form["usuario"].value;
+    let contrasenya = form["password"].value;
 
     getOneUser("paciente", usuario, contrasenya);
     let nombre = "";

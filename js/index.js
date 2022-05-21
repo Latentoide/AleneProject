@@ -49,6 +49,10 @@ export const addPacDoc = (nombre, apellido, email, telf, dir, pob, pro, pais, us
 
 }
 
+export const getOneCheck = (tabl, emails, usus) => {
+    q = query(collection(db, tabl), where( "email","==", emails), where("usuario", "==", usus));
+}
+
 export const getTasks = () => getDocs(collection(db,tabl));
 
 export const getTask = id => getDoc(doc(db, tabl, id));
@@ -187,8 +191,11 @@ let nombre = null;
     let pais = null;
     let usu = null;
     let cont = null;
+    let contRep = null;
+    let repe = 0;
 form.addEventListener('submit', async (e) =>{
     e.preventDefault();
+    console.log("hola");
     if(form.dataset.id === "paciente" || form.dataset.id === "recepcionista"){
         console.log(form.dataset.id);
         nombre = form['nombre'].value;
@@ -203,7 +210,6 @@ form.addEventListener('submit', async (e) =>{
 
 
         if(form.dataset.id === "recepcionista"){
-            if(){ //no dejar que email y usuario esten repetidos aqui, funcion async para comprobar con una query, luego changePass recoger auth correcto
                 cont = passwordDoIt();
                 getLastOf("recepcionista");
                 getWithQ((snapshot) =>{
@@ -212,19 +218,18 @@ form.addEventListener('submit', async (e) =>{
                         register("recepcionista");
                     })
                 });
-            }
         }else{
-            cont = form['contrasenya'].value;
-            contRep = form['cotnrasenyaRep'].value;
-            if(cont === contRep){
-                getLastOf("paciente");
-                getWithQ((snapshot) =>{
-                    snapshot.docs.forEach((doc) => {
-                        numeroId = doc.data().id +1;
-                        register("paciente");
-                    })
-                });
-            }
+                cont = form['contrasenya'].value;
+                contRep = form['cotnrasenyaRep'].value;
+                if(cont === contRep){
+                    getLastOf("paciente");
+                    getWithQ((snapshot) =>{
+                        snapshot.docs.forEach((doc) => {
+                            numeroId = doc.data().id +1;
+                            register("paciente");
+                        })
+                    });
+                }
         }
         
         form.reset()
