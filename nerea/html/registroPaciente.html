@@ -21,36 +21,40 @@
                 </ul>
             </div>
         </div>
-        <form id="task-form">
+        <form data-id="paciente" id="task-form">
             <div class="form-group">
-                <input type="text" id="Nombre" class="form-control" autofocus placeholder="Nombre">
+                <input type="text" id="nombre" class="form-control" autofocus placeholder="Nombre">
             </div>
             <div class="form-group">
-                <textarea id="Apellido" class="form-control" placeholder="Apellido"></textarea>
+                <textarea id="apellido" class="form-control" placeholder="Apellido"></textarea>
             </div>
             <div class="form-group">
-                <input type="text" id="Email" class="form-control" placeholder="Email">
+                <input type="text" id="email" class="form-control" placeholder="Email">
             </div>
             <div class="form-group">
-                <input type="text" id="Telefono" class="form-control" placeholder="Teléfono">
+                <input type="text" id="telefono" class="form-control" placeholder="Teléfono">
             </div>
             <div class="form-group">
-                <input type="text" id="Direccion" class="form-control" placeholder="Dirección">
+                <input type="text" id="direccion" class="form-control" placeholder="Dirección">
             </div>
             <div class="form-group">
-                <input type="text" id="Poblacion" class="form-control" placeholder="Población">
+                <input type="text" id="poblacion" class="form-control" placeholder="Población">
             </div>
             <div class="form-group">
-                <input type="text" id="Provincia" class="form-control" placeholder="Provincia">
+                <input type="text" id="provincia" class="form-control" placeholder="Provincia">
             </div>
             <div class="form-group">
-                <input type="text" id="Pais" class="form-control" placeholder="País">
+                <input type="text" id="pais" class="form-control" placeholder="País">
             </div>
             <div class="form-group">
-                <input type="text" id="Usuario" class="form-control" placeholder="Usuario">
+                <input type="text" id="usuario" class="form-control" placeholder="Usuario">
             </div>
             <div class="form-group">
-                <input type="text" id="Contrasenya" class="form-control" placeholder="Contraseña">
+                <input type="password" id="contrasenya" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" class="form-control" placeholder="Contraseña">
+
+            </div>
+            <div class="form-group">
+                <input type="password" id="cotnrasenyaRep" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" class="form-control" placeholder="Repetir contraseña">
 
             </div>
             
@@ -58,7 +62,7 @@
         </form>
         
         <div id="tasks-container"></div>
-        <script type="module" src="./index.js"></script>
+        <script type="module" src="../../js/index.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         

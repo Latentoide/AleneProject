@@ -49,13 +49,13 @@ export const getOneUser = (tabl, usuario, contrasenya) => {
 }
 
 
-const form = document.getElementById("buscar"); 
+const form = document.getElementById("inicioForm"); 
 const taskCont = document.getElementById("task-form");
 
 window.addEventListener('DOMContentLoaded', e => {
     e.preventDefault();
 })
-
+const paciente = null;
 form.addEventListener("submit", async e => {
     e.preventDefault();
     let usuario = form["usuario"].value;
@@ -66,23 +66,19 @@ form.addEventListener("submit", async e => {
     let apellido = "";
     getWithQ((snapshot) => {
         snapshot.docs.forEach((doc) => {
-            const paciente = doc.data();
+            paciente = doc.data();
             nombre = paciente.nombre;
             apellido = paciente.apellidos;
             console.log(nombre);
             console.log(apellido);
-            let html ='';
-            html += `
-                        <div>
-                            <h3>${paciente.nombre}</h3>
-                            <p>${paciente.apellido}</p>
-                        </div>
-                    
-                    `;
-        
-            taskCont.innerHTML=html;
+            //aqui ya ha recogido el usuario
         })
     });
+
+    if(paciente != null){
+        window.open()
+    }
+    paciente.email
 
 
 
