@@ -82,6 +82,10 @@ export const getOne = (tabl, id) => {
     q = query(collection(db, tabl), where( "id","==", id))
 }
 
+export const getSmth = (tabla, campo, nomrbeEsp) => {
+    q = query(collection(db, tabla), where( campo,"==", nomrbeEsp))
+}
+
 export const getLastOf = (tabl) => {
     q = query(collection(db, tabl), orderBy("id", "desc"), limit(1) );
 }
@@ -92,10 +96,7 @@ export const getWithQ = (callback) => {
 }
 
 
-
-
-
-
+const regex =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}[^'\s]/;;
 
 
 
@@ -103,7 +104,7 @@ const form = document.getElementById("reg-form");
 const taskCont = document.getElementById('tasks-container');
 
 window.addEventListener('DOMContentLoaded', async () => {
-    if(form.dataset == "paciente"){
+    if(form.dataset.id == "paciente"){
         getLastOf("paciente");
         var numeroId = 0;
         getWithQ((snapshot) => {
@@ -180,6 +181,14 @@ const MSJERROR = () =>{
     )
 }
 
+const MSJCONT = () =>{
+    Swal.fire(
+        'Oops!',
+        'La contraseña tiene que tener al menos 8 caracteres, 1 mayúsucla, 1 minúsucla, 1 número, 1 simbolo como estos = "$@$!%*?&"',
+        'error'
+    )
+}
+
 var numeroId = 0;
 let nombre = null;
     let apellido = null;
@@ -193,6 +202,7 @@ let nombre = null;
     let cont = null;
     let contRep = null;
     let repe = 0;
+    let especialidad = null;
 form.addEventListener('submit', async (e) =>{
     e.preventDefault();
     if(form.dataset.id === "paciente" || form.dataset.id === "recepcionista"){
@@ -218,6 +228,7 @@ form.addEventListener('submit', async (e) =>{
                     })
                 });
         }else{
+            if(regex.test(contrasenya) == true){
                 cont = form['contrasenya'].value;
                 contRep = form['cotnrasenyaRep'].value;
                 if(cont === contRep){
@@ -229,12 +240,31 @@ form.addEventListener('submit', async (e) =>{
                         })
                     });
                 }
+            }else{
+                MSJCONT();
+            }
         }
         
         form.reset()
     }
     else if(form.dataset.id === "doctor"){
+        especialidad = form["especialidad"].value;
+        getSmth("especialidad", "nombre", especialidad);
+        const numeroEsp = 0;
+        getWithQ((snapshot) =>{
+            snapshot.docs.forEach((doc) => {
+                numeroEsp = doc.data().id;
+            })
+        });
 
+        cont = passwordDoIt();
+        getLastOf("doctor");
+        getWithQ((snapshot) =>{
+            snapshot.docs.forEach((doc) => {
+                numeroId = doc.data().id +1;
+                register("doctor");
+            })
+        });
     }
 })
 
@@ -252,7 +282,12 @@ async function register(tabl){
                 MSJERROR();
             });
             await sendEmailVerification(user).then(() =>{
-                addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, 0, false, tabl);
+                if(form.dataset.id === "doctor"){
+                    addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, numeroEsp, true, tabl);
+                }else{
+                    addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, 0, false, tabl);
+                }
+                
                 //redirigir a la página buena
             });
 }

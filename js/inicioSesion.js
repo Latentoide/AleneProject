@@ -51,7 +51,7 @@ export const getOneUser = (tabl, usuario, contrasenya) => {
 
 
 const form = document.getElementById("task-form"); 
-// const taskCont = document.getElementById("task-form");
+//const taskCont = document.getElementById("task-form");
 
 window.addEventListener('DOMContentLoaded', e => {
     e.preventDefault();
@@ -73,12 +73,10 @@ form.addEventListener("submit", async e => {
             const paciente = doc.data();
             nombre = paciente.nombre;
             apellido = paciente.apellidos;
-            console.log(nombre);
-            console.log(apellido);
             //aqui ya ha recogido el usuario
             signInWithEmailAndPassword(auth, paciente.email, paciente.contrasenya)
             .then((userCredential) => {
-                window.open("../html/test/verCitas.html", "verCitas", "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes");
+                window.location.assign("../nerea/html/solicitarCita.html");
                 MSJOK();
             })
             .catch((error) => {

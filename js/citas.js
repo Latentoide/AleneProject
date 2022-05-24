@@ -15,7 +15,7 @@ import { getFirestore,
     orderBy,
     limit 
  } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-firestore.js";
- import { getAuth, sendEmailVerification, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js";
+ import { getAuth, sendEmailVerification, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -54,33 +54,60 @@ export const getOne = () => {
 export const onGetCitas = (callback) => {
   onSnapshot(collection(db,"citas"),callback);
 }
+
+export const onGetEspecialidades = (callback) => {
+  onSnapshot(collection(db,"especialidad"),callback);
+}
+
+export const onGetDoctores = (callback) => {
+  onSnapshot(collection(db,"doctor"),callback);
+}
+
+export const getSmth = (tabla, campo, nomrbeEsp) => {
+  q = query(collection(db, tabla), where( campo,"==", nomrbeEsp))
+}
+
+
 const isOn = true;
 const db = getFirestore();
 const user = null;
-    const displayName = null;
-    const email = null;
-    const photoURL = null;
-    const emailVerified = null;
-    const uid = null;
+let email = null;
+let numeroId = 0;
 const auth = getAuth();
-onAuthStateChanged(auth, (user) => {
-  if (user != null) {
-    user = auth.currentUser;
-    displayName = user.displayName;
-    email = user.email;
-    photoURL = user.photoURL;
-    emailVerified = user.emailVerified;
-    uid = user.uid;
-  } else {
-    isOn = false;
-  }
-});
+
 const taskCont = document.getElementById('tasks-container');
 const form = document.getElementById("task-form");
+const select = document.getElementById("especialidad_select");
+const selectdoctor = document.getElementById("doctor_select");
+const dia = document.getElementById("dia");
+const horas = document.getElementById("horas");
 
 window.addEventListener('DOMContentLoaded', async () => {
-  if(form.dataset == "showpaciente" || form.dataset == "showdoctor"){
+  onAuthStateChanged(auth, (user) => {
+    if (user != null) {
+      user = auth.currentUser;
+      email = user.email;
+    } else {
+      isOn = false;
+    }
+  });
+  if(form.dataset.id === "showpaciente" || form.dataset.id === "showdoctor"){
     if(isOn){
+      MSJCUENTA();
+      let a = `<option selected>Doctor</option>`;
+      selectdoctor.innerHTML = a;
+      onGetDoctores((querySnapshot) => {
+        let html ='';
+        //Coger todos los datos de una lista
+        querySnapshot.forEach(doc =>{
+            const doctor = doc.data();
+                html += `
+                  <option>${doctor.nombre}, ${doctor.apellidos}</option>
+                `
+            selectdoctor.innerHTML=html;
+        })
+      })
+
       onGetPacientes((querySnapshot) => {
         let html ='';
         //Coger todos los datos de una lista
@@ -101,16 +128,117 @@ window.addEventListener('DOMContentLoaded', async () => {
         })
       })
     }
-  }else if(form.dataset == "crearCita"){
-    getLastOf("cita");
-    var citaId = 0;
-    getWithQ((snapshot) => {
+  }else if(form.dataset.id === "crearCita"){
+  
+    onGetEspecialidades((querySnapshot) =>{
+      let html ='';
+      //Coger todos los datos de una lista
+      querySnapshot.forEach(doc =>{
+          const especialidad = doc.data();
+          html += `
+              <option>${especialidad.nombre}</option>
+          `
+      })
+
+      select.innerHTML=html;
+  })
+    select.addEventListener("change", async (e) =>{
+      e.preventDefault();
+      getSmth("especialidad", "nombre", select.value);
+      await getWithQ((snapshot) => {
         snapshot.docs.forEach((doc) => {
-          citaId = doc.data().id +1;
+          numeroEsp  = doc.data();
         })
-    });
+        getSmth("doctor", "idEspecialidad", numeroEsp.id);
+        getWithQ((snapshot) => {
+          let html ='';
+          snapshot.docs.forEach((doc) => {
+            const doctor = doc.data();
+      
+            html += `
+                <option data-id="${doctor.id}">${doctor.nombre}</option>
+            `
+          })
+      
+          selectdoctor.innerHTML=html;
+          getSmth("doctor", "nombre", selectdoctor.value);
+          let theDoc = null;
+          let horasAr = [];
+          getWithQ((snapshot) => {
+            snapshot.docs.forEach((doc) => {
+                theDoc = doc.data();
+            })
+            getSmth("citas", "hora", theDoc.id);
+            getWithQ((snapshot) => {
+              let putHora = '';
+              let hora = null;
+              let tiempo = 8;
+              let cantidad = 0;
+              let prueba = false;
+              snapshot.docs.forEach((doc) => {
+                hora = doc.data().hora;
+                horasAr[cantidad++] = hora;
+              })
+              console.log("hi");
+              
+              for(var i = 14; i > 8; i--){
+                
+                if("0"+i+":00" === horasAr[i]){
+
+                }else{
+                  putHora = `
+                    <option>0${i}:00<option>
+                  `;
+                }
+
+              }
+
+              horas.innerHTML = putHora;
+            });
+          });
+        });
+
+         
+
+
+        getLastOf("citas");
+        getWithQ((snapshot) => {
+          snapshot.docs.forEach((doc) => {
+              numeroId = doc.data().id +1;
+          })
+        });
+
+      });
+    })
+  }
+  
+})
+function MSJCUENTA(){
+  let timerInterval
+Swal.fire({
+  title: 'Inicio correcto!',
+  html: 'Bienvenido tu inicio a sido correcto',
+  timer: 1000,
+  timerProgressBar: true,
+  didOpen: () => {
+    Swal.showLoading()
+    const b = Swal.getHtmlContainer().querySelector('b')
+    timerInterval = setInterval(() => {
+      b.textContent = Swal.getTimerLeft()
+    }, 100)
+  },
+  willClose: () => {
+    clearInterval(timerInterval)
+  }
+}).then((result) => {
+  /* Read more about handling dismissals below */
+  if (result.dismiss === Swal.DismissReason.timer) {
+    console.log('I was closed by the timer')
   }
 })
+}
+let numeroEsp = null;
+
 
 form.addEventListener("submit", async () => {
   const l = getTheIdPac();
