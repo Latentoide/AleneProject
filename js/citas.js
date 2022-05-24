@@ -89,6 +89,7 @@ const form = document.getElementById("task-form");
 const select = document.getElementById("especialidad_select");
 const selectdoctor = document.getElementById("doctor_select");
 const dia = document.getElementById("dia");
+const crearVer = document.getElementById("alejandro");
 const horas = document.getElementById("horas");
 let theDoc = null;
 let usu = null;
@@ -115,70 +116,50 @@ async function saberQuien(){
             })
             quienEs = "recepcionista";
             console.log(quienEs);
+            Inicio();
           });
         }else{
           quienEs = "doctor";
           console.log(quienEs);
+          Inicio();
         }
       });
     }
     else{
       quienEs = "paciente";
       console.log(quienEs);
+      Inicio();
     }
   });
 
 }
 
-window.addEventListener('DOMContentLoaded', async () => {
-  onAuthStateChanged(auth, (user) => {
-    if (user != null) {
-      user = auth.currentUser;
-      email = user.email;
-      saberQuien();
-    } else {
-      isOn = false;
-    }
-  });
-  //necesito componente que no sea null para comprobar si esta creando no
-  if(quienEs == "paciente" || quienEs == "doctor"){
-    if(isOn){
-      MSJCUENTA();
-      let a = `<option selected>Doctor</option>`;
-      selectdoctor.innerHTML = a;
-      onGetDoctores((querySnapshot) => {
-        let html ='';
-        //Coger todos los datos de una lista
-        querySnapshot.forEach(doc =>{
-            const doctor = doc.data();
-                html += `
-                  <option>${doctor.nombre}, ${doctor.apellidos}</option>
-                `
-            selectdoctor.innerHTML=html;
+async function Inicio(){
+  if(crearVer.dataset.id === "ver"){
+    if(quienEs == "paciente"){
+      console.log("ver");
+      if(isOn){
+        MSJCUENTA();
+        let a = `<option selected>Doctor</option>`;
+        selectdoctor.innerHTML = a;
+        onGetDoctores((querySnapshot) => {
+          let html ='';
+          //Coger todos los datos de una lista
+          querySnapshot.forEach(doc =>{
+              const doctor = doc.data();
+                  html += `
+                    <option>${doctor.nombre}, ${doctor.apellidos}</option>
+                  `
+              selectdoctor.innerHTML=html;
+          })
+          let a = `
+          <option selected>Doctor</option>
+        `
+          selectdoctor.innerHTML+=a;
         })
-      })
-
-      onGetPacientes((querySnapshot) => {
-        let html ='';
-        //Coger todos los datos de una lista
-        querySnapshot.forEach(doc =>{
-            const cita = doc.data();
-            if(cita.email === email){
-                html += `
-                <div>
-                    <h3>${cita.nombre}</h3>
-                    <p>${cita.apellidos}</p>
-                    <p>${cita.id}</p>
-                    <button class='btn-delete' data-id="${doc.id}">Delete</button>
-                    <button class='btn-edit' data-id="${doc.id}">Edit</button>
-                </div>
-            `
-            }
-            taskCont.innerHTML=html;
-        })
-      })
+      }
     }
-  }else if(form.dataset.id === "crearCita"){
+  }else if(crearVer.dataset.id === "crear"){
     MSJCUENTA();
     onGetEspecialidades((querySnapshot) =>{
       let html ='';
@@ -260,7 +241,19 @@ window.addEventListener('DOMContentLoaded', async () => {
       });
     })
   }
-  
+
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+  onAuthStateChanged(auth, (user) => {
+    if (user != null) {
+      user = auth.currentUser;
+      email = user.email;
+      saberQuien();
+    } else {
+      isOn = false;
+    }
+  });
 })
 function MSJCUENTA(){
   let timerInterval

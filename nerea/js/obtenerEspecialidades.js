@@ -55,5 +55,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         })
 
         select.innerHTML=html;
+
+        let a = `<option selected>Especialidad</option>`
+        select.innerHTML+=a;
     })
 })
