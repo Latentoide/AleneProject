@@ -76,7 +76,7 @@ form.addEventListener("submit", async e => {
             //aqui ya ha recogido el usuario
             signInWithEmailAndPassword(auth, paciente.email, paciente.contrasenya)
             .then((userCredential) => {
-                window.location.assign("crearCitas.html");
+                window.location.assign("../nerea/html/verCitas.html");
                 MSJOK();
             })
             .catch((error) => {
