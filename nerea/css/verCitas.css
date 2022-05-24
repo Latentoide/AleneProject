@@ -36,3 +36,7 @@ select {
 #doctor_select {
     margin-left: -100px;
 }
+
+.solicitarCita {
+    margin-bottom: 20px;
+}
