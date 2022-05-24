@@ -44,7 +44,7 @@
                             <div class="form-group">
                                 <input type="text" class="form-control" autofocus placeholder="Usuario" id="usuario">
         
-                                <input type="password" class="form-control" id="contrasenya" placeholder="Contraseña">
+                                <input type="password" class="form-control" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" id="contrasenya" placeholder="Contraseña">
                                 
                                 <div class="iniSes vstack gap-2 mx-auto">
                                     <button type="submit" class="btn btn-info">INICIAR SESION</button>

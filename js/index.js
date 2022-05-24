@@ -195,7 +195,6 @@ let nombre = null;
     let repe = 0;
 form.addEventListener('submit', async (e) =>{
     e.preventDefault();
-    console.log("hola");
     if(form.dataset.id === "paciente" || form.dataset.id === "recepcionista"){
         console.log(form.dataset.id);
         nombre = form['nombre'].value;

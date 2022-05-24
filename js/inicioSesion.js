@@ -13,6 +13,7 @@ import { getFirestore,
     orderBy,
     limit 
  } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-firestore.js";
+ import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -34,7 +35,7 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
 const db = getFirestore();
-
+const auth = getAuth();
 var q = null;
 export const getWithQ = (callback) => {
     onSnapshot(q, callback);
@@ -49,14 +50,17 @@ export const getOneUser = (tabl, usuario, contrasenya) => {
 }
 
 
-const form = document.getElementById("buscar"); 
+const form = document.getElementById("inicioForm"); 
 const taskCont = document.getElementById("task-form");
 
 window.addEventListener('DOMContentLoaded', e => {
     e.preventDefault();
 })
-
 form.addEventListener("submit", async e => {
+    signOut(auth).then(() => {
+      }).catch((error) => {
+      });
+      
     e.preventDefault();
     let usuario = form["usuario"].value;
     let contrasenya = form["password"].value;
@@ -71,24 +75,43 @@ form.addEventListener("submit", async e => {
             apellido = paciente.apellidos;
             console.log(nombre);
             console.log(apellido);
-            let html ='';
-            html += `
-                        <div>
-                            <h3>${paciente.nombre}</h3>
-                            <p>${paciente.apellido}</p>
-                        </div>
-                    
-                    `;
-        
-            taskCont.innerHTML=html;
+            //aqui ya ha recogido el usuario
+            signInWithEmailAndPassword(auth, paciente.email, paciente.contrasenya)
+            .then((userCredential) => {
+                window.open("../html/test/verCitas.html", "verCitas", "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes");
+                MSJOK();
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                MSJERROR();
+            });
         })
     });
 
 
 
 
+
+
     
 })
+
+const MSJOK = () =>{
+    Swal.fire(
+        'Buen trabajo!',
+        'Datos guardados correctamente',
+        'success'
+    )
+}
+
+const MSJERROR = () =>{
+    Swal.fire(
+        'Oops!',
+        'Los datos no fueron guardados correctamente',
+        'error'
+    )
+}
 
 async function put (){
     onGetPacientes((querySnapshot) => {

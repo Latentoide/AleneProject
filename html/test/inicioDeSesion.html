@@ -13,12 +13,12 @@
                 <form id="inicioForm">
                     <div class="form-group">
                         <label><p>Usuario</p></label>
-                        <input type="text" id="Usuario" class="form-control" placeholder="Usuario">
+                        <input type="text" id="usuario" class="form-control" placeholder="Usuario">
                     </div>
     
                     <div class="form-group">
                         <label><p>Contraseña</p></label>
-                        <input type="password" id="Contrasenya" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" class="form-control" placeholder="Contraseña">
+                        <input type="password" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" class="form-control" placeholder="Contraseña">
                     </div>
     
                     <button class="btn btn-prim ary" id="inicio">Iniciar Sesion</button>
@@ -28,9 +28,13 @@
             </div>
             <div class="paraRegistrar">
                 <form data-id="paciente" id="registroForm">
-                    <button class="btn btn-prim ary " onClick="window.open('../crud-test-firebase/index.html', 'Registro')" id="registrarse">Click aquí para registrarse</button>
+                    <button class="btn btn-prim ary " onClick=" window.open('../crud-test-firebase/index.html', 'Registro')" id="registrarse">Click aquí para registrarse</button>
                 </form>
             </div>
         </div>
+        <div id="task-cont"></div>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script type="module" src="../../js/inicioSesion.js"></script>
+        
     </body>
 </html>
