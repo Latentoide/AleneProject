@@ -12,6 +12,10 @@
     font-size: medium;
 }
 
+.ind {
+    text-indent: 25px;
+}
+
 .txt-div {
     padding-top: 15px;
     padding-left: 25px;
@@ -29,6 +33,7 @@
 
 .h4 {
     text-align: center;
+    padding-top: 15px;
 }
 
 .cards {
@@ -36,5 +41,6 @@
 }
 
 .txt {
-    padding-top: 15px;
+    padding-left: 35px;
+    padding-right: 35px;
 }

@@ -41,6 +41,11 @@ main {
     height: 530px;
 }
 
+
 input {
+    margin-top: 15px;
+}
+
+select {
     margin-top: 15px;
 }

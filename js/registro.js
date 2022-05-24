@@ -99,7 +99,7 @@ export const getWithQ = (callback) => {
 
 
 
-const form = document.getElementById("task-form");
+const form = document.getElementById("reg-form");
 const taskCont = document.getElementById('tasks-container');
 
 window.addEventListener('DOMContentLoaded', async () => {

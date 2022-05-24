@@ -50,8 +50,8 @@ export const getOneUser = (tabl, usuario, contrasenya) => {
 }
 
 
-const form = document.getElementById("inicioForm"); 
-const taskCont = document.getElementById("task-form");
+const form = document.getElementById("task-form"); 
+// const taskCont = document.getElementById("task-form");
 
 window.addEventListener('DOMContentLoaded', e => {
     e.preventDefault();

@@ -1,0 +1,38 @@
+main {
+    padding-left: 20%;
+    padding-right: 20%;
+}
+
+.filtro {
+    margin-top: 20px;
+}
+
+table {
+    margin-top: 20px;
+    outline-style: solid;
+    outline-width: 2px;
+    outline-color: black;
+}
+
+td {
+    width: 20%;
+}
+
+td img {
+    margin-left: 42.5%;
+    max-width: 15%;
+    max-height: 15%;
+}
+
+.h2 {
+    text-align: center;
+    padding-top: 30px;
+}
+
+select {
+    margin-left: -55px;
+}
+
+#doctor_select {
+    margin-left: -100px;
+}
