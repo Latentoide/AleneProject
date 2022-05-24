@@ -51,6 +51,11 @@ export const getWithQ = (callback) => {
 export const getOne = () => {
   q = query(collection(db, "paciente"), where( "email","==", email))
 }
+
+export const saber = (tbl) => {
+  q = query(collection(db, tbl), where( "email","==", email))
+}
+
 export const onGetCitas = (callback) => {
   onSnapshot(collection(db,"citas"),callback);
 }
@@ -67,6 +72,10 @@ export const getSmth = (tabla, campo, nomrbeEsp) => {
   q = query(collection(db, tabla), where( campo,"==", nomrbeEsp))
 }
 
+export const getFechaHora = (fechaj, idDocj) => {
+  q = query(collection(db, "cita"), where( "fecha","==", fechaj), where("idDoc", "==", idDocj))
+}
+
 
 const isOn = true;
 const db = getFirestore();
@@ -81,17 +90,58 @@ const select = document.getElementById("especialidad_select");
 const selectdoctor = document.getElementById("doctor_select");
 const dia = document.getElementById("dia");
 const horas = document.getElementById("horas");
+let theDoc = null;
+let usu = null;
+let quienEs = null;
+async function saberQuien(){
+  saber("paciente");
+  getWithQ((snapshot) => {
+    snapshot.docs.forEach((doc) => {
+      usu = doc.data();
+    })
+    console.log(usu);
+    if(usu == null){
+      saber("doctor");
+      getWithQ((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          usu = doc.data();
+        })
+        console.log(usu);
+        if(usu == null){
+          saber("recepcionista");
+          getWithQ((snapshot) => {
+            snapshot.docs.forEach((doc) => {
+              usu = doc.data();
+            })
+            quienEs = "recepcionista";
+            console.log(quienEs);
+          });
+        }else{
+          quienEs = "doctor";
+          console.log(quienEs);
+        }
+      });
+    }
+    else{
+      quienEs = "paciente";
+      console.log(quienEs);
+    }
+  });
+
+}
 
 window.addEventListener('DOMContentLoaded', async () => {
   onAuthStateChanged(auth, (user) => {
     if (user != null) {
       user = auth.currentUser;
       email = user.email;
+      saberQuien();
     } else {
       isOn = false;
     }
   });
-  if(form.dataset.id === "showpaciente" || form.dataset.id === "showdoctor"){
+  //necesito componente que no sea null para comprobar si esta creando no
+  if(quienEs == "paciente" || quienEs == "doctor"){
     if(isOn){
       MSJCUENTA();
       let a = `<option selected>Doctor</option>`;
@@ -129,7 +179,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       })
     }
   }else if(form.dataset.id === "crearCita"){
-  
+    MSJCUENTA();
     onGetEspecialidades((querySnapshot) =>{
       let html ='';
       //Coger todos los datos de una lista
@@ -162,52 +212,51 @@ window.addEventListener('DOMContentLoaded', async () => {
       
           selectdoctor.innerHTML=html;
           getSmth("doctor", "nombre", selectdoctor.value);
-          let theDoc = null;
+
           let horasAr = [];
           getWithQ((snapshot) => {
             snapshot.docs.forEach((doc) => {
                 theDoc = doc.data();
             })
-            getSmth("citas", "hora", theDoc.id);
-            getWithQ((snapshot) => {
-              let putHora = '';
-              let hora = null;
-              let tiempo = 8;
-              let cantidad = 0;
-              let prueba = false;
-              snapshot.docs.forEach((doc) => {
-                hora = doc.data().hora;
-                horasAr[cantidad++] = hora;
-              })
-              console.log("hi");
-              
-              for(var i = 14; i > 8; i--){
-                
-                if("0"+i+":00" === horasAr[i]){
-
-                }else{
-                  putHora = `
-                    <option>0${i}:00<option>
-                  `;
+            dia.addEventListener("change", async (e) => {
+              getFechaHora(dia.value, theDoc.id);
+              getWithQ((snapshot) => {
+                let putHora = '';
+                let hora = null;
+                let tiempo = 8;
+                let cantidad = 0;
+                let prueba = false;
+                snapshot.docs.forEach((doc) => {
+                  hora = doc.data();
+                  horasAr[cantidad++] = hora.hora;
+                })
+                let u = 0;
+                for(var i = 8; i < 15; i++){
+                  console.log(horasAr[u]);
+                  if(i >= 10){
+                    if(i+":00" === horasAr[u]){
+                    }else{
+                      putHora = `
+                        <option>${i}:00<option>
+                      `;
+                      horas.innerHTML += putHora;
+                    }
+                  }else{
+                    if("0"+i+":00" === horasAr[u]){
+                    }else{
+                      putHora = `
+                        <option>0${i}:00<option>
+                      `;
+                      horas.innerHTML += putHora;
+                    }
+                  }
+                  u++;
                 }
-
-              }
-
-              horas.innerHTML = putHora;
-            });
+              });
+            })
+            
           });
         });
-
-         
-
-
-        getLastOf("citas");
-        getWithQ((snapshot) => {
-          snapshot.docs.forEach((doc) => {
-              numeroId = doc.data().id +1;
-          })
-        });
-
       });
     })
   }
@@ -224,7 +273,6 @@ Swal.fire({
     Swal.showLoading()
     const b = Swal.getHtmlContainer().querySelector('b')
     timerInterval = setInterval(() => {
-      b.textContent = Swal.getTimerLeft()
     }, 100)
   },
   willClose: () => {
@@ -240,11 +288,25 @@ Swal.fire({
 let numeroEsp = null;
 
 
-form.addEventListener("submit", async () => {
-  const l = getTheIdPac();
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  getLastOf("citas");
+  let citaId = 0;
+  getWithQ((snapshot) => {
+    snapshot.docs.forEach((doc) => {
+      citaId = doc.data().id +1;
+    })
+  });
+  getOne();
+  let l = null;
+  getWithQ((snapshot) => {
+    snapshot.docs.forEach((doc) => {
+        l = doc.data();
+        console.log(l);
+    })
+    addCita(dia.value,horas.value, citaId, theDoc.id, l.id, null);
+  });
+
     //queda hacer select de doctores disponibles
-  await awaitaddCita(form["fecha"].value,form["hora"].value, citaId, form["idDoc"].value, l.id, form["observacion"].value);
+
 })
-await function getTheIdPac(){
- return getOne;
-}
