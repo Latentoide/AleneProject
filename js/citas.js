@@ -37,7 +37,7 @@ const analytics = getAnalytics(app);
 var q = null;
 
 export const addCita = (fecha, hora, idCita, idDoc, idPaciente, observacion) => {
-  addDoc(collection(db, "cita"), { fecha:fecha,hora: hora,idCita: idCita,idDoc: idDoc,idPaciente: idPaciente,observacion: observacion});
+  addDoc(collection(db, "cita"), { fecha:fecha,hora: hora,idCita: idCita,idDoc: idDoc,idPaciente: idPaciente,observacion: observacion, entrada:false });
 }
 
 export const getLastOf = (tabl) => {
@@ -91,9 +91,12 @@ const selectdoctor = document.getElementById("doctor_select");
 const dia = document.getElementById("dia");
 const crearVer = document.getElementById("alejandro");
 const horas = document.getElementById("horas");
+const citas = document.getElementById("citas");
 let theDoc = null;
 let usu = null;
 let quienEs = null;
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2,"0")+'-'+today.getDate().toString().padStart(2,"0");
 async function saberQuien(){
   saber("paciente");
   getWithQ((snapshot) => {
@@ -157,6 +160,50 @@ async function Inicio(){
         `
           selectdoctor.innerHTML+=a;
         })
+
+        let idPac = null;
+        getSmth("paciente", "email", email)
+        getWithQ((snapshot) => {
+          snapshot.docs.forEach((doc) => {
+            idPac = doc.data();
+          })
+          getSmth("cita", "idPaciente", idPac.id);
+          let cita = null;
+          let html = null;
+          getWithQ((snapshot) => {
+            snapshot.docs.forEach((doc) => {
+              cita = doc.data();
+            });
+              getSmth("doctor", "id",cita.idDoc);
+              let docId = null;
+              let espId = null;
+              getWithQ((snapshot) => {
+                snapshot.docs.forEach((doc) => {
+                  docId = doc.data();
+                })
+
+                getSmth("especialidad", "id",docId.idEspecialidad);
+                getWithQ((snapshot) => {
+                  snapshot.docs.forEach((doc) => {
+                    espId = doc.data();
+                  })
+                  if(cita.fecha >= date){
+                    html += `
+                    <tr>
+                      <td scope="row">${cita.fecha} // ${cita.hora}</td>
+                      <td>${docId.nombre}</td>
+                      <td>${espId.nombre}</td>
+                      <td>texto plano</td>
+                      <td><img src="../img/editar.png" alt="icono editar cita"></td>
+                    </tr>
+                    `
+                    citas.innerHTML=html;
+                  }
+                })
+              });   
+            })
+            citas.innerHTML=html;
+          })
       }
     }
   }else if(crearVer.dataset.id === "crear"){
@@ -200,19 +247,29 @@ async function Inicio(){
                 theDoc = doc.data();
             })
             dia.addEventListener("change", async (e) => {
+              if(dia.value < date){
+                dia.value = date;
+              }
+              console.log(dia.value);
               getFechaHora(dia.value, theDoc.id);
               getWithQ((snapshot) => {
-                let putHora = '';
+
                 let hora = null;
                 let tiempo = 8;
                 let cantidad = 0;
                 let prueba = false;
+                horas.innerHTML = ''; 
+                for (let x = horasAr.length; x > 0; x--) {
+                  horasAr.pop();
+                }
                 snapshot.docs.forEach((doc) => {
                   hora = doc.data();
                   horasAr[cantidad++] = hora.hora;
                 })
+
                 let u = 0;
                 for(var i = 8; i < 15; i++){
+                  let putHora = '';
                   console.log(horasAr[u]);
                   if(i >= 10){
                     if(i+":00" === horasAr[u]){
@@ -260,7 +317,7 @@ function MSJCUENTA(){
 Swal.fire({
   title: 'Inicio correcto!',
   html: 'Bienvenido tu inicio a sido correcto',
-  timer: 1000,
+  timer: 1500,
   timerProgressBar: true,
   didOpen: () => {
     Swal.showLoading()

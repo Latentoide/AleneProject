@@ -63,9 +63,16 @@ form.addEventListener("submit", async e => {
       
     e.preventDefault();
     let usuario = form["usuario"].value;
-    let contrasenya = form["password"].value;
+    let contrasenya = form["contrasenya"].value;
+    
+    if(form.dataset.id === "paciente"){
+        getOneUser("paciente", usuario, contrasenya);
+    }else if(form.dataset.id === "doctor"){
+        getOneUser("doctor", usuario, contrasenya);
+    }else if(form.dataset.id === "recepcionista"){
+        getOneUser("recepcionista", usuario, contrasenya);
+    }
 
-    getOneUser("paciente", usuario, contrasenya);
     let nombre = "";
     let apellido = "";
     getWithQ((snapshot) => {
@@ -76,7 +83,7 @@ form.addEventListener("submit", async e => {
             //aqui ya ha recogido el usuario
             signInWithEmailAndPassword(auth, paciente.email, paciente.contrasenya)
             .then((userCredential) => {
-                window.location.assign("crearCitas.html");
+                window.location.assign("verCitas.html");
                 MSJOK();
             })
             .catch((error) => {

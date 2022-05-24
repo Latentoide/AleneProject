@@ -96,7 +96,7 @@ export const getWithQ = (callback) => {
 }
 
 
-const regex =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}[^'\s]/;;
+const regex =  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{7,15}[^'\s]/;
 
 
 
@@ -113,7 +113,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 console.log(numeroId);
             })
         });
-        onGetPacientes((querySnapshot) => {
+        /*onGetPacientes((querySnapshot) => {
             let html ='';
             //Coger todos los datos de una lista
             querySnapshot.forEach(doc =>{
@@ -139,7 +139,7 @@ window.addEventListener('DOMContentLoaded', async () => {
                 })
             })
 
-            /*const btnEdit = taskCont.querySelectorAll('.btn-edit');
+            const btnEdit = taskCont.querySelectorAll('.btn-edit');
             btnDelete.forEach(btn => {
                 btn.addEventListener('click', async  ({target:{dataset}}) => {
                     const doc = await getTask(dataset.id);
@@ -151,15 +151,22 @@ window.addEventListener('DOMContentLoaded', async () => {
                         contrasenya : form['contrasenya'].value;
                     })
                 })
-            })*/
-        })
+            })
+        })*/
     }else if(form.dataset.id === "recepcionista"){
         getLastOf("recepcionista");
         var numeroId = 0;
         getWithQ((snapshot) => {
             snapshot.docs.forEach((doc) => {
                 numeroId = doc.data().id +1;
-                console.log(numeroId);
+            })
+        });
+    }else if(form.dataset.id === "doctor"){
+        getLastOf("doctor");
+        var numeroId = 0;
+        getWithQ((snapshot) => {
+            snapshot.docs.forEach((doc) => {
+                numeroId = doc.data().id +1;
             })
         });
     }
@@ -203,93 +210,98 @@ let nombre = null;
     let contRep = null;
     let repe = 0;
     let especialidad = null;
+    let numeroEsp = 0;
 form.addEventListener('submit', async (e) =>{
     e.preventDefault();
+    nombre = form['nombre'].value;
+    apellido = form['apellido'].value;
+    email = form['email'].value;
+    telf = form['telefono'].value;
+    dir = form['direccion'].value;
+    pob = form['poblacion'].value;
+    pro = form['provincia'].value;
+    pais = form['pais'].value;
+    usu = form['usuarioReg'].value;
     if(form.dataset.id === "paciente" || form.dataset.id === "recepcionista"){
-        console.log(form.dataset.id);
-        nombre = form['nombre'].value;
-        apellido = form['apellido'].value;
-        email = form['email'].value;
-        telf = form['telefono'].value;
-        dir = form['direccion'].value;
-        pob = form['poblacion'].value;
-        pro = form['provincia'].value;
-        pais = form['pais'].value;
-        usu = form['usuario'].value;
-
-
         if(form.dataset.id === "recepcionista"){
                 cont = passwordDoIt();
                 getLastOf("recepcionista");
                 getWithQ((snapshot) =>{
                     snapshot.docs.forEach((doc) => {
                         numeroId = doc.data().id +1;
-                        register("recepcionista");
                     })
+                    register("recepcionista");
                 });
         }else{
-            if(regex.test(contrasenya) == true){
-                cont = form['contrasenya'].value;
-                contRep = form['cotnrasenyaRep'].value;
+            console.log(regex.test(contrasenya));
+            //if(regex.test(contrasenya) == true){
+                cont = form['contrasenyaReg'].value;
+                contRep = form['contrasenyaRep'].value;
                 if(cont === contRep){
                     getLastOf("paciente");
                     getWithQ((snapshot) =>{
                         snapshot.docs.forEach((doc) => {
                             numeroId = doc.data().id +1;
-                            register("paciente");
                         })
+                        register("paciente");
                     });
                 }
-            }else{
-                MSJCONT();
-            }
+            //}else{
+                //MSJCONT();
+            //}
         }
         
         form.reset()
     }
     else if(form.dataset.id === "doctor"){
-        especialidad = form["especialidad"].value;
+        especialidad = form["especialidad_select"].value;
         getSmth("especialidad", "nombre", especialidad);
-        const numeroEsp = 0;
         getWithQ((snapshot) =>{
             snapshot.docs.forEach((doc) => {
                 numeroEsp = doc.data().id;
             })
-        });
 
-        cont = passwordDoIt();
-        getLastOf("doctor");
-        getWithQ((snapshot) =>{
+            cont = passwordDoIt();
+            getLastOf("doctor");
+            getWithQ((snapshot) =>{
             snapshot.docs.forEach((doc) => {
                 numeroId = doc.data().id +1;
-                register("doctor");
             })
+            register("doctor");
         });
+        });
+
+        
     }
 })
 
 async function register(tabl){
+    let a = false;
     const auth = getAuth();
-            var user = null;
+    var user = null;
+    console.log(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, numeroEsp, true, tabl);
             const credentialsuser = await createUserWithEmailAndPassword(auth, email, cont)
             .then((userCredential) => {
                 user = userCredential.user;
                 MSJOK();
+
+                    sendEmailVerification(user).then(() =>{
+                        if(form.dataset.id === "doctor"){
+
+                            addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, numeroEsp, true, tabl);
+                        }else{
+                            addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, 0, false, tabl);
+                        }
+
+                    });
+                
             })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
                 MSJERROR();
             });
-            await sendEmailVerification(user).then(() =>{
-                if(form.dataset.id === "doctor"){
-                    addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, numeroEsp, true, tabl);
-                }else{
-                    addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, 0, false, tabl);
-                }
-                
-                //redirigir a la página buena
-            });
+           
 }
 
 
