@@ -1,8 +1,6 @@
-form {
-    padding-bottom: 25px;
-    padding-left: 100px;
-    padding-right: 100px;
-    width: 80%;
+main {
+    margin-top: 20px;
+    margin-bottom: 25px;
 }
 
 .iniSes {
@@ -25,4 +23,24 @@ form {
 
 .btns {
     margin: 3%;
+}
+
+.iniB {
+    border: solid 5px black;
+    background-image: url("../img/fondoLogin2.png");
+    width: 400px;
+    height: 530px;
+    padding-top: 50px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.regB {
+    background-color: black;
+    width: 400px;
+    height: 530px;
+}
+
+input {
+    margin-top: 15px;
 }

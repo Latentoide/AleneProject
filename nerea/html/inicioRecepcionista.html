@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device=width, initial-scale=1.0">
-        <title>Alene hospital -  Inicio Sesion Empleado</title>
+        <title>Alene hospital -  Inicio Sesion Paciente</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
         <link href="../css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/comun.css" rel="stylesheet">
@@ -36,31 +36,28 @@
             </nav>
         </header>
 
-        <main>
-          <div class="d-flex position-relative txt-div">
-            <img src="../img/quirofano.jpg" class="flex-shrink-0 me-3 info-txt" alt="...">
-            <form data-id="recepcionista" id="task-form">
-                <fieldset>
-                    <div class="form-group">
-                        <label class="col-form-label mt-4" for="inputDefault">Usuario</label>
-                        <input type="text" class="form-control" placeholder="Usuario" id="usuario">
-
-                        <label for="exampleInputPassword1" class="form-label mt-4">Contraseña</label>
-                        <input type="password" class="form-control" id="contrasenya" placeholder="Contraseña">
-                        
-                        <div class="iniSes vstack gap-2 col-xl-10 mx-auto">
-                            <button type="submit" class="btn btn-info">INICIAR SESION</button>
-                            <button type="button" class="btn btn-outline-secondary">Modificar Contraseña</button>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>   
-            <img src="../img/tension.jpg" class="flex-shrink-0 me-3 info-txt" alt="...">
-          </div>   
+        <main class="container">
+            <div class="row justify-content-around">
+                <div class="col-4 justify-content-center iniB">
+                    <form data-id="paciente" id="task-form">
+                        <fieldset>
+                            <div class="form-group">
+                                <input type="text" class="form-control" autofocus placeholder="Usuario" id="usuario">
+        
+                                <input type="password" class="form-control" id="contrasenya" placeholder="Contraseña">
+                                
+                                <div class="iniSes vstack gap-2 mx-auto">
+                                    <button type="submit" class="btn btn-info">INICIAR SESION</button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form> 
+                </div>
+            </div>
         </main>
 
         <footer>
-            <div class="fixed-bottom bottom navbar-nav">
+            <div class="bottom navbar-nav">
               <ul class="nav">
                 <li class="nav-item">
                   <a class="nav-link" href="#"><img class="fb" src="../img/fb.png" alt="..."/></a>
@@ -90,7 +87,7 @@
               <p class="text-center text-muted">© 2022 Hospital ALENE</p>
             </div>
           </footer>
-
+          
           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     </body>
 </html>

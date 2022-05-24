@@ -36,34 +36,74 @@
             </nav>
         </header>
 
-        <main>
-            <div class="d-flex position-relative txt-div">
-                <img src="../img/quirofano.jpg" class="flex-shrink-0 me-3 info-txt" alt="...">
-                <form data-id="paciente" id="task-form">
-                    <fieldset>
-                        <div class="form-group">
-                            <label class="col-form-label mt-4" for="inputDefault">Usuario</label>
-                            <input type="text" class="form-control" placeholder="Usuario" id="usuario">
-    
-                            <label for="exampleInputPassword1" class="form-label mt-4">Contraseña</label>
-                            <input type="password" class="form-control" id="contrasenya" placeholder="Contraseña">
-                            
-                            <div class="iniSes vstack gap-2 col-xl-10 mx-auto">
-                                <button type="submit" class="btn btn-info">INICIAR SESION</button>
-                                <div class="gap-4 btns">
-                                    <button type="button" class="btn btn-outline-secondary">Modificar Contraseña</button>
-                                    <button type="button" class="btn btn-outline-secondary">Crear nueva cuenta</button>
+        <main class="container">
+            <div class="row justify-content-around">
+                <div class="col-4 justify-content-center iniB">
+                    <form data-id="paciente" id="task-form">
+                        <fieldset>
+                            <div class="form-group">
+                                <input type="text" class="form-control" autofocus placeholder="Usuario" id="usuario">
+        
+                                <input type="password" class="form-control" id="contrasenya" placeholder="Contraseña">
+                                
+                                <div class="iniSes vstack gap-2 mx-auto">
+                                    <button type="submit" class="btn btn-info">INICIAR SESION</button>
+                                    <button type="button" class="btn btn-outline-light">Modificar Contraseña</button>
                                 </div>
                             </div>
+                        </fieldset>
+                    </form> 
+                </div>
+                
+                <div class="col-4 justify-content-center regB">
+                    <form id="task-form">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" id="Nombre" class="form-control" placeholder="Nombre">
+                                </div>
+                                <div class="col">
+                                    <input type="text" id="Apellido" class="form-control" placeholder="Apellido">
+                                </div>
+                            </div>
+                        
+                            <input type="text" id="Email" class="form-control" placeholder="Email">
+                        
+                            <input type="text" id="Telefono" class="form-control" placeholder="Teléfono">
+
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" id="Direccion" class="form-control" placeholder="Dirección">
+                                </div>
+                                <div class="col">
+                                    <input type="text" id="Poblacion" class="form-control" placeholder="Población">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" id="Provincia" class="form-control" placeholder="Provincia">
+                                </div>
+                                <div class="col">
+                                    <input type="text" id="Pais" class="form-control" placeholder="País">
+                                </div>
+                            </div>
+
+                            <input type="text" id="Usuario" class="form-control" placeholder="Usuario">
+                        
+                            <input type="text" id="Contrasenya" class="form-control" placeholder="Contraseña">
+                        
+                            <div class="iniSes vstack gap-2 col-xl-10 mx-auto">
+                                <button type="submit" class="btn btn-info">REGISTRARSE</button>
+                            </div>
                         </div>
-                    </fieldset>
-                </form>  
-                <img src="../img/tension.jpg" class="flex-shrink-0 me-3 info-txt" alt="...">
+                    </form>
+                </div>
             </div>
         </main>
 
         <footer>
-            <div class="fixed-bottom bottom navbar-nav">
+            <div class="bottom navbar-nav">
               <ul class="nav">
                 <li class="nav-item">
                   <a class="nav-link" href="#"><img class="fb" src="../img/fb.png" alt="..."/></a>
