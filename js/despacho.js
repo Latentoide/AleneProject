@@ -30,7 +30,9 @@ import { getFirestore,
     appId: "1:434544182339:web:f0385992b5fbbc01fd80f6",
     measurementId: "G-1Q7M2DT7G5"
   };
-          
+
+var alert_despacho_s = document.getElementById('alert_despacho_s');
+var alert_despacho_d = document.getElementById('alert_despacho_d');
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
@@ -60,15 +62,19 @@ export const getDespacho = (pisoq, puertaq,) => {
     q = query(collection(db, "despacho"), where( "piso","==", pisoq), where( "puerta","==", puertaq))
 }
 
+export const getDepsSol = (id,) => {
+    q = query(collection(db, "solicita_despacho"), where( "fecha","==", fechacambiante.value), where( "idDoc","==", id))
+}
+
 export const addsolDes = (fecha, id, idDespacho, idDoc) => {
     addDoc(collection(db, "solicita_despacho"), { fecha:fecha,id: id,idDespacho: idDespacho,idDoc: idDoc});
 }
 
 
-const selection = document.getElementById("reg-form");
-const selectionpiso = document.getElementById("piso-form");
-const fecha = document.getElementById("fecha");
-const fechacambiante = document.getElementById("laFecha");
+const selection = document.getElementById("puerta_select");
+const selectionpiso = document.getElementById("piso_select");
+const fecha = document.getElementById("reg-form");
+const fechacambiante = document.getElementById("dia");
 let despachoJ = null;
 let user = null;
 let email = null;
@@ -97,7 +103,6 @@ fechacambiante.addEventListener("change", async ()=>{
         selectionpiso.innerHTML = "";
         //Coger todos los datos de una lista
         querySnapshot.forEach(doc =>{
-            console.log(doc.data())
             getSmth("solicita_despacho", "idDespacho", doc.data().idDespacho);
             getWithQ((snapshot) => {
                 snapshot.docs.forEach((doc) => {
@@ -105,26 +110,55 @@ fechacambiante.addEventListener("change", async ()=>{
                 })
                 onGetDesp((querySnapshot) =>{
                     querySnapshot.forEach(doc =>{
-                        console.log(doc.data())
-                        if(despachoJ.idDespacho != doc.data().id){
-                            let html =`
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                            `;
-
-                            let a =`
-                                <option>1</option>
-                                <option>2</option>
-                            `;
-
-                            selectionpiso.innerHTML = a;
-                            selection.innerHTML = html;
-                        }
 
                     })
+                        
+                    getWithQ((snapshot) => {
+                        snapshot.docs.forEach((doc) => {
+                            despachoJ = doc.data();
+                        })
+                        let theDoc = null;
+                        getSmth("doctor", "email", email);
+                        getWithQ((snapshot) => {
+                            snapshot.docs.forEach((doc) => {
+                                theDoc = doc.data();
+                            })
+                            
+                            getDepsSol(theDoc.id);
+                            let thing = null;
+                            getWithQ((snapshot) => {
+                                snapshot.docs.forEach((doc) => {
+                                    thing = doc.data();
+                                })
+
+                                if(despachoJ.idDespacho != doc.data().id){
+                                    console.log(thing);
+                                    if(thing == null){
+                                        alert_despacho_s.classList.remove('oculta');
+                                        alert_despacho_d.classList.add('oculta');
+                                    }else{
+                                        alert_despacho_s.classList.add('oculta');
+                                        alert_despacho_d.classList.remove('oculta');
+                                    }
+                                    let html =`
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                        `;
+            
+                                        let a =`
+                                            <option>1</option>
+                                            <option>2</option>
+                                        `;
+            
+                                    selectionpiso.innerHTML = a;
+                                    selection.innerHTML = html;
+                                }
+                            })
+                        })
+                    })   
                 })
             })
         })
