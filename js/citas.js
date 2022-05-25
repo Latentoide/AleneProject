@@ -190,7 +190,7 @@ async function Inicio(){
                   if(cita.fecha >= date){
                     html += `
                     <tr>
-                      <td scope="row">${cita.fecha} // ${cita.hora}</td>
+                      <td scope="row">${cita.fecha} ${cita.hora}</td>
                       <td>${docId.nombre}</td>
                       <td>${espId.nombre}</td>
                       <td>texto plano</td>
