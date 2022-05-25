@@ -72,8 +72,13 @@ const fechacambiante = document.getElementById("laFecha");
 let despachoJ = null;
 let user = null;
 let email = null;
+let as = false;
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2,"0")+'-'+today.getDate().toString().padStart(2,"0");
+var tomorrow = today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2,"0")+'-'+(today.getDate()+1).toString().padStart(2,"0");
 
 window.addEventListener('DOMContentLoaded', async () => {
+    as = false;
     onAuthStateChanged(auth, (user) => {
         if (user != null) {
           user = auth.currentUser;
@@ -84,6 +89,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       });
 })
 fechacambiante.addEventListener("change", async ()=>{
+    if(fechacambiante.value <= date){
+        fechacambiante.value = tomorrow;
+    }
     onGetDespSol((querySnapshot) =>{
         selection.innerHTML = "";
         selectionpiso.innerHTML = "";
@@ -100,15 +108,20 @@ fechacambiante.addEventListener("change", async ()=>{
                         console.log(doc.data())
                         if(despachoJ.idDespacho != doc.data().id){
                             let html =`
-                                <option>${doc.data().puerta}</option>
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
                             `;
 
                             let a =`
-                                <option>${doc.data().piso}</option>
+                                <option>1</option>
+                                <option>2</option>
                             `;
 
-                            selectionpiso.innerHTML += a;
-                            selection.innerHTML += html;
+                            selectionpiso.innerHTML = a;
+                            selection.innerHTML = html;
                         }
 
                     })
@@ -137,9 +150,10 @@ fecha.addEventListener("submit", async (e)=>{
                 snapshot.docs.forEach((doc) => {
                     thePiso = doc.data();
                 })
-
-                addsolDes(fechacambiante.value, numId,thePiso.id ,doctor.id);
-                location.reload();
+                if(!as){
+                    addsolDes(fechacambiante.value, numId.id+1,thePiso.id ,doctor.id);
+                    as = true;
+                }
             })
         })
     })
