@@ -19,6 +19,24 @@
               
               <div class="collapse navbar-collapse" id="navbarColor02">
                 <ul class="navbar-nav me-auto">
+                  <div class="hstack oculta" id="docLinks">
+                    <li class="nav-item">
+                      <a class="nav-link" href="verCitasDoc.html">Citas</a>
+                    </li>
+                    <li class="nav-item width-m">
+                      <a class="nav-link" href="solicitarDespacho.html">Solicitar despacho</a>
+                    </li>
+                  </div>
+
+                  <div class="hstack oculta" id="pacLinks">
+                    <li class="nav-item">
+                      <a class="nav-link" href="verCitas.html">Citas</a>
+                    </li>
+                    <li class="nav-item width-s">
+                      <a class="nav-link" href="solicitarCita.html">Solicitar cita</a>
+                    </li>
+                  </div>
+                  
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Inicio sesion</a>
                     <div class="dropdown-menu">
@@ -37,17 +55,18 @@
       </header>
       
       <main>
-        <p class="h2">CITAS DE HOY</p>
+        <citas class="">
+          <p class="h2">CITAS DE HOY</p>
 
-        <div class="row justify-content-center">
-            <div class="col-4 rounded-pill muestraConsulta">Consulta : piso 13, puerta 26</div>
-        </div>
+          <div class="row justify-content-center">
+              <div class="col-4 rounded-pill muestraConsulta">Consulta : piso 13, puerta 26</div>
+          </div>
 
-        <div class="d-grid gap-2 col-6 mx-auto filtro">
-            <button type="button" class="btn btn-dark">VER SOLO CITAS ACTIVAS</button>
-        </div>
+          <div class="d-grid gap-2 col-6 mx-auto filtro">
+              <button type="button" class="btn btn-dark">VER SOLO CITAS ACTIVAS</button>
+          </div>
 
-        <table class="table table-striped verCitaDoc">
+          <table class="table table-striped verCitaDoc">
             <thead>
               <tr>
                 <th scope="col">FECHA</th>
@@ -70,7 +89,29 @@
                 <td><img src="../img/editar.png" alt="icono editar cita"></td>
               </tr>
             </tbody>
-        </table>
+          </table>
+        </citas>
+
+        <datos-cita class="">
+          <div class="hstack">
+            <p>FECHA : '' HORA : ''  </p>
+            <div class="space-s"></div>
+            <p>PACIENTE : Nombre Apellidos</p>
+          </div>
+          
+          <div class="row justify-content-around">
+            <div class="col-10 justify-content-center solicitud">
+                <form data-id="despacho" id="reg-form">
+                    <div class="form-group">
+                      <div class="hstack">
+                        <label for="exampleTextarea" class="form-label mt-4 width-l">OBSERVACIONES DE LA CITA</label>
+                        <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                      </div>
+                    </div>
+                </form>
+            </div>
+          </div>
+        </datos-cita>
       </main>
 
       <footer>

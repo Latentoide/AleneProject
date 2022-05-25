@@ -19,6 +19,24 @@
               
               <div class="collapse navbar-collapse" id="navbarColor02">
                 <ul class="navbar-nav me-auto">
+                  <div class="hstack oculta" id="docLinks">
+                    <li class="nav-item">
+                      <a class="nav-link" href="verCitasDoc.html">Citas</a>
+                    </li>
+                    <li class="nav-item width-m">
+                      <a class="nav-link" href="solicitarDespacho.html">Solicitar despacho</a>
+                    </li>
+                  </div>
+
+                  <div class="hstack oculta" id="pacLinks">
+                    <li class="nav-item">
+                      <a class="nav-link" href="verCitas.html">Citas</a>
+                    </li>
+                    <li class="nav-item width-s">
+                      <a class="nav-link" href="solicitarCita.html">Solicitar cita</a>
+                    </li>
+                  </div>
+
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Inicio sesion</a>
                     <div class="dropdown-menu">
@@ -39,10 +57,10 @@
       <main class="container">
         <div class="row justify-content-around">
             <div class="col-4 justify-content-center">
-                <div class="alert alert-dismissible alert-success" id="alert_despacho_s">
+                <div class="alert alert-dismissible alert-success oculta" id="alert_despacho_s">
                     <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
                 </div>
-                <div class="alert alert-dismissible alert-danger" id="alert_despacho_d">
+                <div class="alert alert-dismissible alert-danger oculta" id="alert_despacho_d">
                     <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
                 </div>
             </div>
@@ -72,13 +90,9 @@
                           </div>
                       </div>
 
-                        
-
-                        
-                    
-                        <div class="iniSes vstack gap-2 col-xl-10 mx-auto">
-                            <button type="submit" class="btn btn-info">RESERVAR CONSULTA</button>
-                        </div>
+                      <div class="iniSes vstack gap-2 col-xl-10 mx-auto">
+                          <button type="submit" class="btn btn-info">RESERVAR CONSULTA</button>
+                      </div>
                     </div>
                 </form>
             </div>
