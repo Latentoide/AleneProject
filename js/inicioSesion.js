@@ -55,6 +55,7 @@ const form = document.getElementById("task-form");
 
 window.addEventListener('DOMContentLoaded', e => {
     e.preventDefault();
+    console.log(form.dataset.id);
 })
 form.addEventListener("submit", async e => {
     signOut(auth).then(() => {
@@ -72,7 +73,6 @@ form.addEventListener("submit", async e => {
     }else if(form.dataset.id === "recepcionista"){
         getOneUser("recepcionista", usuario, contrasenya);
     }
-
     let nombre = "";
     let apellido = "";
     getWithQ((snapshot) => {
@@ -83,7 +83,14 @@ form.addEventListener("submit", async e => {
             //aqui ya ha recogido el usuario
             signInWithEmailAndPassword(auth, paciente.email, paciente.contrasenya)
             .then((userCredential) => {
-                window.location.assign("verCitas.html");
+                if(form.dataset.id === "paciente"){
+                    window.location.assign("verCitas.html");
+                }else if(form.dataset.id === "doctor"){
+                    window.location.assign("verCitasDoc.html");
+                }else if(form.dataset.id === "recepcionista"){
+                    window.location.assign("verCitas.html");
+                }
+
                 MSJOK();
             })
             .catch((error) => {

@@ -128,6 +128,7 @@ async function saberQuien(){
   
   }
   async function Inicio(){
+    console.log(crearVer.dataset.id)
     if(crearVer.dataset.id === "ver"){
       if(quienEs == "doctor"){
         console.log("ver");
@@ -163,10 +164,9 @@ async function saberQuien(){
                     if(cita.fecha == date){
                       html += `
                       <tr>
-                        <td scope="row">${cita.fecha} // ${cita.hora}</td>
+                        <td scope="row">${cita.fecha}</td>
+                        <td>${cita.hora}</td>
                         <td>${docId.nombre}</td>
-                        <td>${espId.nombre}</td>
-                        <td>texto plano</td>
                         <td><img src="../img/editar.png" alt="icono editar cita"></td>
                       </tr>
                       `

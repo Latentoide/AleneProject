@@ -56,6 +56,9 @@ export const getWithQ = (callback) => {
 export const getSmth = (tabla, campo, nomrbeEsp) => {
     q = query(collection(db, tabla), where( campo,"==", nomrbeEsp))
 }
+export const getDespacho = (pisoq, puertaq,) => {
+    q = query(collection(db, "despacho"), where( "piso","==", pisoq), where( "puerta","==", puertaq))
+}
 
 export const addsolDes = (fecha, id, idDespacho, idDoc) => {
     addDoc(collection(db, "solicita_despacho"), { fecha:fecha,id: id,idDespacho: idDespacho,idDoc: idDoc});
@@ -63,6 +66,7 @@ export const addsolDes = (fecha, id, idDespacho, idDoc) => {
 
 
 const selection = document.getElementById("reg-form");
+const selectionpiso = document.getElementById("piso-form");
 const fecha = document.getElementById("fecha");
 const fechacambiante = document.getElementById("laFecha");
 let despachoJ = null;
@@ -82,6 +86,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 fechacambiante.addEventListener("change", async ()=>{
     onGetDespSol((querySnapshot) =>{
         selection.innerHTML = "";
+        selectionpiso.innerHTML = "";
         //Coger todos los datos de una lista
         querySnapshot.forEach(doc =>{
             console.log(doc.data())
@@ -95,8 +100,14 @@ fechacambiante.addEventListener("change", async ()=>{
                         console.log(doc.data())
                         if(despachoJ.idDespacho != doc.data().id){
                             let html =`
-                                <option data-id="${despachoJ.idDespacho}">Puerta: ${doc.data().puerta} Piso: ${doc.data().piso}</option>
+                                <option>${doc.data().puerta}</option>
                             `;
+
+                            let a =`
+                                <option>${doc.data().piso}</option>
+                            `;
+
+                            selectionpiso.innerHTML += a;
                             selection.innerHTML += html;
                         }
 
@@ -111,6 +122,7 @@ fecha.addEventListener("submit", async (e)=>{
     getLastOf("solicita_despacho");
     let numId = 0;
     let doctor = null;
+    let thePiso =null;
     getWithQ((snapshot) => {
         snapshot.docs.forEach((doc) => {
             numId = doc.data();
@@ -120,8 +132,15 @@ fecha.addEventListener("submit", async (e)=>{
             snapshot.docs.forEach((doc) => {
                 doctor = doc.data();
             })
-            console.log(selection);
-            addsolDes(fechacambiante, numId,selection.value.dataset.id ,doctor.id);
+            getDespacho(parseInt(selectionpiso.value), parseInt(selection.value));
+            getWithQ((snapshot) => {
+                snapshot.docs.forEach((doc) => {
+                    thePiso = doc.data();
+                })
+
+                addsolDes(fechacambiante.value, numId,thePiso.id ,doctor.id);
+                location.reload();
+            })
         })
     })
 

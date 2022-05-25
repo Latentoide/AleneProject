@@ -151,7 +151,7 @@ async function Inicio(){
           querySnapshot.forEach(doc =>{
               const doctor = doc.data();
                   html += `
-                    <option>${doctor.nombre}, ${doctor.apellidos}</option>
+                    <option>${doctor.nombre} ${doctor.apellidos}</option>
                   `
               selectdoctor.innerHTML=html;
           })

@@ -7,7 +7,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
         <link href="../css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/comun.css" rel="stylesheet">
-        <link href="../css/formulario.css" rel="stylesheet">
+        <link href="../css/verCitas.css" rel="stylesheet">
     </head>
     <body>
       <header>
@@ -35,39 +35,46 @@
             </div>
         </nav>
       </header>
+      
+      <main>
+        <p class="h2">CITAS DE HOY</p>
 
-      <main class="container">
-        <div class="row justify-content-around">
-            <div class="col-4 justify-content-center">
-                <div class="alert alert-dismissible alert-success" id="alert_despacho_s">
-                    <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
-                </div>
-                <div class="alert alert-dismissible alert-danger oculta" id="alert_despacho_d">
-                    <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
-                </div>
-            </div>
+        <div class="row justify-content-center">
+            <div class="col-4 rounded-pill muestraConsulta">Consulta : piso 13, puerta 26</div>
         </div>
-        
-        <div class="row justify-content-around">
-            <div class="col-4 justify-content-center regB solicitud">
-                <form data-id="despacho" id="reg-form">
-                    <div class="form-group">
-                        <input type="date" id="dia" class="form-control">
 
-                        <select class="form-select" id="despacho_select">
-                        </select>
-                    
-                        <div class="iniSes vstack gap-2 col-xl-10 mx-auto">
-                            <button type="submit" class="btn btn-info">RESERVAR CONSULTA</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+        <div class="d-grid gap-2 col-6 mx-auto filtro">
+            <button type="button" class="btn btn-dark">VER SOLO CITAS ACTIVAS</button>
         </div>
+
+        <table class="table table-striped verCitaDoc">
+            <thead>
+              <tr>
+                <th scope="col">FECHA</th>
+                <th scope="col">HORA</th>
+                <th scope="col">PACIENTE</th>
+                <th scope="col">AÑADIR DATOS</th>
+              </tr>
+            </thead>
+            <tbody id="citas" class="doc">
+              <tr>
+                <td scope="row">Default</td>
+                <td>Column content</td>
+                <td>Column content</td>
+                <td><img src="../img/editar.png" alt="icono editar cita"></td>
+              </tr>
+              <tr>
+                <td scope="row">Default</td>
+                <td>Column content</td>
+                <td>Column content</td>
+                <td><img src="../img/editar.png" alt="icono editar cita"></td>
+              </tr>
+            </tbody>
+        </table>
       </main>
 
       <footer>
-        <div class="fixed-bottom bottom navbar-nav">
+        <div class="bottom navbar-nav">
           <ul class="nav">
             <li class="nav-item">
               <a class="nav-link" href="#"><img class="fb" src="../img/fb.png" alt="..."/></a>
@@ -98,8 +105,10 @@
         </div>
       </footer>
 
+      <div id="alejandro" data-id="ver" class="oculta"></div>
+
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-      <script type="module" src="../../js/citas.js"></script>
+      <script type="module" src="../js/reservasDoc.js"></script>
       <script type="module" src="../js/obtenerEspecialidades.js"></script>
       <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </body>

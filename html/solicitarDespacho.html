@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device=width, initial-scale=1.0">
-        <title>Firebase CRUD</title>
+        <title>Alene hospital -  Inicio</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
         <link href="../css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/comun.css" rel="stylesheet">
@@ -13,7 +13,7 @@
       <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
             <div class="container-fluid">
-              <a class="navbar-brand" href="index.html"><img src="../img/LogoBlanco.png" alt="icono hospital"/> HOSPITAL ALENE</a>
+              <a class="navbar-brand" href="index.html"><img src="../img/LogoBlanco.png"/> HOSPITAL ALENE</a>
 
               <div class="space"></div>
               
@@ -34,56 +34,39 @@
               </div>
             </div>
         </nav>
-    </header>
+      </header>
 
       <main class="container">
         <div class="row justify-content-around">
-            <div class="col-4 justify-content-center regB">
-                <form data-id="recepcionista" id="reg-form">
+            <div class="col-4 justify-content-center">
+                <div class="alert alert-dismissible alert-success" id="alert_despacho_s">
+                    <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
+                </div>
+                <div class="alert alert-dismissible alert-danger oculta" id="alert_despacho_d">
+                    <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
+                </div>
+            </div>
+        </div>
+        
+        <div class="row justify-content-around">
+            <div class="col-4 justify-content-center regB solicitud">
+                <form data-id="despacho" id="reg-form">
                     <div class="form-group">
-                      <div class="row">
-                          <div class="col">
-                              <input type="text" id="nombre" class="form-control" placeholder="Nombre">
-                          </div>
-                          <div class="col">
-                              <input type="text" id="apellido" class="form-control" placeholder="Apellido">
-                          </div>
-                      </div>
-                  
-                      <input type="text" id="email" class="form-control" placeholder="Email">
-                  
-                      <input type="text" id="telefono" class="form-control" placeholder="Teléfono">
+                        <input type="date" id="dia" class="form-control">
 
-                      <div class="row">
-                          <div class="col">
-                              <input type="text" id="direccion" class="form-control" placeholder="Dirección">
-                          </div>
-                          <div class="col">
-                              <input type="text" id="poblacion" class="form-control" placeholder="Población">
-                          </div>
-                      </div>
-
-                      <div class="row">
-                          <div class="col">
-                              <input type="text" id="provincia" class="form-control" placeholder="Provincia">
-                          </div>
-                          <div class="col">
-                              <input type="text" id="pais" class="form-control" placeholder="País">
-                          </div>
-                      </div>
-
-                      <input type="text" id="usuarioReg" class="form-control" placeholder="Usuario">
-                    </div>
-                  
-                    <div class="iniSes vstack gap-2 col-xl-10 mx-auto">
-                        <button type="submit" class="btn btn-info">REGISTRARSE</button>
+                        <select class="form-select" id="despacho_select">
+                        </select>
+                    
+                        <div class="iniSes vstack gap-2 col-xl-10 mx-auto">
+                            <button type="submit" class="btn btn-info">RESERVAR CONSULTA</button>
+                        </div>
                     </div>
                 </form>
             </div>
         </div>
-    </main>
+      </main>
 
-    <footer>
+      <footer>
         <div class="fixed-bottom bottom navbar-nav">
           <ul class="nav">
             <li class="nav-item">
@@ -116,7 +99,8 @@
       </footer>
 
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
-      <script type="module" src="../../js/registro.js"></script>
+      <script type="module" src="../js/citas.js"></script>
+      <script type="module" src="../js/obtenerEspecialidades.js"></script>
       <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </body>
 </html>
