@@ -13,6 +13,10 @@ a {
     width: 70%;
 }
 
+.oculta {
+    display: none;
+}
+
 .bottom {
     background-color: #343a40;
 }
