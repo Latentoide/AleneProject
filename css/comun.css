@@ -9,6 +9,26 @@ a {
     max-height: 60px;
 }
 
+.width-less {
+    margin-right: 15px;
+}
+
+.width-s {
+    width: 145px;
+}
+
+.width-m {
+    width: 195px;
+}
+
+.width-xl {
+    width: 400px;
+}
+
+.space-s {
+    width: 30%;
+}
+
 .space {
     width: 70%;
 }

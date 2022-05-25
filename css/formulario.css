@@ -45,6 +45,12 @@ main {
     height: 530px;
 }
 
+.soli {
+    background-color: black;
+    width: 500px;
+    height: 530px;
+}
+
 .solicitud {
     padding-top: 50px;
     padding-bottom: 50px;

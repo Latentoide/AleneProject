@@ -55,7 +55,35 @@
       </header>
 
       <main>
-        
+        <div class="row justify-content-center width-less">
+          <div class="col-4 justify-content-center soli solicitud">
+              <form data-id="crearCita" id="task-form">
+                  <div class="form-group">
+                    <input type="text" class="form-control oculta" id="usuPaciente" placeholder="Usuario de paciente">
+                    
+                    <select class="form-select" id="especialidad_select">
+                    </select>
+                    
+                    <select class="form-select" id="doctor_select">
+                    </select>
+
+                    <div class="row">
+                      <div class="col">
+                        <input type="date" id="dia" class="form-control">
+                      </div>
+                      <div class="col">
+                        <select class="form-select" id="horas">
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="iniSes vstack gap-2 col-md-10 mx-auto">
+                        <button type="submit" class="btn btn-info">RESERVAR CITA</button>
+                    </div>
+                  </div>
+              </form>
+          </div>
+        </div>
       </main>
 
       <footer>
@@ -90,9 +118,10 @@
         </div>
       </footer>
 
+      <div id="alejandro" data-id="crear" class="oculta"></div>
+
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
       <script type="module" src="../js/citas.js"></script>
-      <script type="module" src="../js/obtenerEspecialidades.js"></script>
       <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </body>
 </html>

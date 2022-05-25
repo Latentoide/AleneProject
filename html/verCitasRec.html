@@ -55,12 +55,12 @@
       </header>
       
       <main>
-        <p class="h2">MIS CITAS</p>
+        <p class="h2">CITAS</p>
 
         <div class="hstack gap-3 filtro">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Especialidad</label>
-            <select class="form-select" id="especialidad_select">
-            </select>
+            <label for="inputEmail3" class="col-sm-1 col-form-label">Paciente</label>
+            <input type="text" class="form-control" id="usuPaciente" placeholder="Usuario de paciente">
+
             <button type="button" class="btn btn-dark">Buscar</button>
 
             <div class="vr"></div>
@@ -69,7 +69,6 @@
             <select class="form-select" id="doctor_select">
             </select>
             <button type="button" class="btn btn-dark">Buscar</button>
-            
         </div>
 
         <table class="table table-striped">
@@ -78,31 +77,34 @@
                 <th scope="col">FECHA/HORA</th>
                 <th scope="col">DOCTOR</th>
                 <th scope="col">ESPECIALIDAD</th>
+                <th scope="col">PACIENTE</th>
                 <th scope="col">CONSULTA</th>
-                <th scope="col">MODIFICAR/ANULAR</th>
+                <th scope="col">ENTRADA</th>
               </tr>
             </thead>
-            <tbody id="citas" class="pac">
+            <tbody id="citasRec" class="pac">
               <tr>
                 <td scope="row">Default</td>
                 <td>Column content</td>
                 <td>Column content</td>
                 <td>Column content</td>
-                <td><img src="../img/editar.png" alt="icono editar cita"></td>
+                <td>Column content</td>
+                <td class="regEnt"><img src="../img/registra_entrada.png" alt="icono registra entrada"></td>
               </tr>
               <tr>
                 <td scope="row">Default</td>
                 <td>Column content</td>
                 <td>Column content</td>
                 <td>Column content</td>
-                <td><img src="../img/editar.png" alt="icono editar cita"></td>
+                <td>Column content</td>
+                <td class="regEnt"><img src="../img/registra_entrada.png" alt="icono registra entrada"></td>
               </tr>
             </tbody>
         </table>
 
         <a href="solicitarCita.html">
-            <div class="vstack gap-2 mx-auto solicitarCita">
-                <button type="submit" class="btn btn-outline-info">SOLICITAR UNA CITA</button>
+            <div class="vstack gap-2 mx-auto verCitaRec">
+                <button type="submit" class="btn btn-outline-info">SOLICITAR UNA CITA PARA UN PACIENTE</button>
             </div>
         </a>
       </main>
