@@ -36,8 +36,34 @@
         </nav>
       </header>
 
-      <main>
+      <main class="container">
+        <div class="row justify-content-around">
+            <div class="col-4 justify-content-center">
+                <div class="alert alert-dismissible alert-success" id="alert_despacho_s">
+                    <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
+                </div>
+                <div class="alert alert-dismissible alert-danger oculta" id="alert_despacho_d">
+                    <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
+                </div>
+            </div>
+        </div>
         
+        <div class="row justify-content-around">
+            <div class="col-4 justify-content-center regB solicitud">
+                <form data-id="despacho" id="reg-form">
+                    <div class="form-group">
+                        <input type="date" id="dia" class="form-control">
+
+                        <select class="form-select" id="despacho_select">
+                        </select>
+                    
+                        <div class="iniSes vstack gap-2 col-xl-10 mx-auto">
+                            <button type="submit" class="btn btn-info">RESERVAR CONSULTA</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
       </main>
 
       <footer>

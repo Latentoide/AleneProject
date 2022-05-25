@@ -3,6 +3,18 @@ main {
     padding-right: 20%;
 }
 
+.h2 {
+    text-align: center;
+    padding-top: 30px;
+}
+
+.muestraConsulta {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: #1f9acf86;
+    text-align: center;
+}
+
 .filtro {
     margin-top: 20px;
 }
@@ -12,6 +24,10 @@ table {
     outline-style: solid;
     outline-width: 2px;
     outline-color: black;
+}
+
+th {
+    font-weight: bold;
 }
 
 td {
@@ -24,11 +40,6 @@ td img {
     max-height: 15%;
 }
 
-.h2 {
-    text-align: center;
-    padding-top: 30px;
-}
-
 select {
     margin-left: -55px;
 }
@@ -37,6 +48,10 @@ select {
     margin-left: -100px;
 }
 
+.verCitaDoc {
+    margin-bottom: 14.8%;
+}
+
 .solicitarCita {
-    margin-bottom: 20px;
+    margin-bottom: 17.8%;
 }

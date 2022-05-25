@@ -3,6 +3,10 @@ main {
     margin-bottom: 25px;
 }
 
+.oculta {
+    display: none;
+}
+
 .iniSes {
     margin-top: 20px;
 }
@@ -41,6 +45,11 @@ main {
     height: 530px;
 }
 
+.solicitud {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    height: auto;
+}
 
 input {
     margin-top: 15px;
