@@ -72,14 +72,18 @@ form.addEventListener("submit", async e => {
         getOneUser("doctor", usuario, contrasenya);
     }else if(form.dataset.id === "recepcionista"){
         getOneUser("recepcionista", usuario, contrasenya);
+    }else if(form.dataset.id === "admin"){
+        getOneUser("admin", usuario, contrasenya);
     }
     let nombre = "";
     let apellido = "";
     getWithQ((snapshot) => {
         snapshot.docs.forEach((doc) => {
             const paciente = doc.data();
-            nombre = paciente.nombre;
-            apellido = paciente.apellidos;
+            if(form.dataset.id != "admin"){
+                nombre = paciente.nombre;
+                apellido = paciente.apellidos;
+            }
             //aqui ya ha recogido el usuario
             signInWithEmailAndPassword(auth, paciente.email, paciente.contrasenya)
             .then((userCredential) => {
@@ -88,7 +92,10 @@ form.addEventListener("submit", async e => {
                 }else if(form.dataset.id === "doctor"){
                     window.location.assign("verCitasDoc.html");
                 }else if(form.dataset.id === "recepcionista"){
-                    window.location.assign("verCitas.html");
+                    window.location.assign("verCitasRec.html");
+                }else if(form.dataset.id === "admin"){
+                    //tiene que terminar
+                    //window.location.assign();
                 }
 
                 MSJOK();

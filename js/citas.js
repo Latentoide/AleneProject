@@ -37,7 +37,7 @@ const analytics = getAnalytics(app);
 var q = null;
 
 export const addCita = (fecha, hora, idCita, idDoc, idPaciente, observacion) => {
-  addDoc(collection(db, "cita"), { fecha:fecha,hora: hora,idCita: idCita,idDoc: idDoc,idPaciente: idPaciente,observacion: observacion, entrada:false });
+  addDoc(collection(db, "cita"), { fecha:fecha,hora: hora,id: idCita,idDoc: idDoc,idPaciente: idPaciente,observacion: observacion, entrada:false });
 }
 
 export const getLastOf = (tabl) => {
@@ -57,7 +57,7 @@ export const saber = (tbl) => {
 }
 
 export const onGetCitas = (callback) => {
-  onSnapshot(collection(db,"citas"),callback);
+  onSnapshot(collection(db,"cita"),callback);
 }
 
 export const onGetEspecialidades = (callback) => {
@@ -117,9 +117,21 @@ async function saberQuien(){
             snapshot.docs.forEach((doc) => {
               usu = doc.data();
             })
-            quienEs = "recepcionista";
-            console.log(quienEs);
-            Inicio();
+            if(usu == null){
+              saber("admin");
+              getWithQ((snapshot) => {
+              snapshot.docs.forEach((doc) => {
+                  usu = doc.data();
+              })
+              quienEs = "admin";
+              console.log(quienEs);
+              Inicio();
+              });
+            }else{
+              quienEs = "recepcionista";
+              console.log(quienEs);
+              Inicio();
+            }
           });
         }else{
           quienEs = "doctor";
@@ -194,7 +206,11 @@ async function Inicio(){
                       <td>${docId.nombre}</td>
                       <td>${espId.nombre}</td>
                       <td>texto plano</td>
-                      <td><img src="../img/editar.png" alt="icono editar cita"></td>
+                      <td class="regEnt">
+                        <button type="submit" class="citaIcono2 oculta">
+                            <img data-id="${cita.id} " src="../img/editar.png" alt="icono editar cita">
+                        </button>   
+                      </td>
                     </tr>
                     `
                     citas.innerHTML=html;
@@ -340,7 +356,7 @@ let numeroEsp = null;
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  getLastOf("citas");
+  getLastOf("cita");
   let citaId = 0;
   getWithQ((snapshot) => {
     snapshot.docs.forEach((doc) => {
