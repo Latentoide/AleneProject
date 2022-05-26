@@ -1,6 +1,6 @@
 main {
-    padding-left: 20%;
-    padding-right: 20%;
+    padding-left: 10%;
+    padding-right: 10%;
 }
 
 .h2 {
@@ -31,17 +31,29 @@ table {
 }
 
 th {
-    font-weight: bold;
+    margin-left: -30px;
 }
 
 td {
     width: 20%;
 }
 
-td img {
-    margin-left: 42.5%;
-    max-width: 15%;
-    max-height: 15%;
+.btncabecera {
+    border: none; 
+    background: none;
+}
+
+.citaIcono {
+    margin-left: -30%;
+    border: none; 
+    background: none;
+    width: 130%;
+}
+
+.citaIcono2 {
+    border: none; 
+    background: none;
+    width: 70%;
 }
 
 .regEnt img {

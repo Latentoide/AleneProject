@@ -70,10 +70,18 @@
           <table class="table table-striped verCitaDoc">
             <thead>
               <tr>
-                <th scope="col">FECHA</th>
-                <th scope="col">HORA</th>
-                <th scope="col">PACIENTE</th>
-                <th scope="col">AÑADIR DATOS</th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">FECHA</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">HORA</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">PACIENTE</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-outline-dark">AÑADIR DATOS</button>
+                </th>
               </tr>
             </thead>
             <tbody id="citas" class="doc">
@@ -81,13 +89,21 @@
                 <td scope="row">Default</td>
                 <td>Column content</td>
                 <td>Column content</td>
-                <td><img src="../img/editar.png" alt="icono editar cita"></td>
+                <td class="regEnt">
+                  <button type="submit" class="citaIcono2">
+                    <img src="../img/editar.png" alt="icono editar cita">
+                  </button>
+                </td>
               </tr>
               <tr>
                 <td scope="row">Default</td>
                 <td>Column content</td>
                 <td>Column content</td>
-                <td><img src="../img/editar.png" alt="icono editar cita"></td>
+                <td class="regEnt">
+                  <button type="submit" class="citaIcono2">
+                    <img src="../img/editar.png" alt="icono editar cita">
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>

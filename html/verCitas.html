@@ -76,11 +76,21 @@
         <table class="table table-striped">
             <thead>
               <tr>
-                <th scope="col">FECHA/HORA</th>
-                <th scope="col">DOCTOR</th>
-                <th scope="col">ESPECIALIDAD</th>
-                <th scope="col">CONSULTA</th>
-                <th scope="col">MODIFICAR/ANULAR</th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">FECHA/HORA</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">DOCTOR</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">ESPECIALIDAD</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">PACIENTE</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-outline-dark">MODIFICAR/ANULAR</button>
+                </th>
               </tr>
             </thead>
             <tbody id="citas" class="pac">
@@ -89,14 +99,22 @@
                 <td>Column content</td>
                 <td>Column content</td>
                 <td>Column content</td>
-                <td><img src="../img/editar.png" alt="icono editar cita"></td>
+                <td class="regEnt">
+                  <button type="submit" class="citaIcono2">
+                    <img src="../img/editar.png" alt="icono editar cita">
+                  </button>
+                </td>
               </tr>
               <tr>
                 <td scope="row">Default</td>
                 <td>Column content</td>
                 <td>Column content</td>
                 <td>Column content</td>
-                <td><img src="../img/editar.png" alt="icono editar cita"></td>
+                <td class="regEnt">
+                  <button type="submit" class="citaIcono2">
+                    <img src="../img/editar.png" alt="icono editar cita">
+                  </button>
+                </td>
               </tr>
             </tbody>
         </table>

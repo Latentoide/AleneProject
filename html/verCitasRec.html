@@ -75,12 +75,24 @@
         <table class="table table-striped">
             <thead>
               <tr>
-                <th scope="col">FECHA/HORA</th>
-                <th scope="col">DOCTOR</th>
-                <th scope="col">ESPECIALIDAD</th>
-                <th scope="col">PACIENTE</th>
-                <th scope="col">CONSULTA</th>
-                <th scope="col">ENTRADA</th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">FECHA/HORA</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">DOCTOR</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">ESPECIALIDAD</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">PACIENTE</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-light disabled btncabecera">CONSULTA</button>
+                </th>
+                <th scope="col">
+                  <button type="button" class="btn btn-outline-dark">ENTRADA</button>
+                </th>
               </tr>
             </thead>
             <tbody id="citasRec" class="pac">
@@ -90,7 +102,11 @@
                 <td>Column content</td>
                 <td>Column content</td>
                 <td>Column content</td>
-                <td class="regEnt"><img src="../img/registra_entrada.png" alt="icono registra entrada"></td>
+                <td class="regEnt">
+                  <button type="submit" class="citaIcono">
+                    <img src="../img/registra_entrada.png" alt="icono registra entrada">
+                  </button>
+                </td>
               </tr>
               <tr>
                 <td scope="row">Default</td>
@@ -98,7 +114,11 @@
                 <td>Column content</td>
                 <td>Column content</td>
                 <td>Column content</td>
-                <td class="regEnt"><img src="../img/registra_entrada.png" alt="icono registra entrada"></td>
+                <td class="regEnt">
+                  <button type="submit" class="citaIcono">
+                    <img src="../img/registra_entrada.png" alt="icono registra entrada">
+                  </button>
+                </td>
               </tr>
             </tbody>
         </table>
