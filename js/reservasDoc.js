@@ -89,44 +89,56 @@ const crearVer = document.getElementById("alejandro");
 let usu = null;
 let quienEs = "";
 async function saberQuien(){
-    saber("paciente");
-    getWithQ((snapshot) => {
-      snapshot.docs.forEach((doc) => {
-        usu = doc.data();
-      })
-      console.log(usu);
-      if(usu == null){
-        saber("doctor");
-        getWithQ((snapshot) => {
-          snapshot.docs.forEach((doc) => {
-            usu = doc.data();
-          })
-          console.log(usu);
-          if(usu == null){
-            saber("recepcionista");
-            getWithQ((snapshot) => {
+  saber("paciente");
+  getWithQ((snapshot) => {
+    snapshot.docs.forEach((doc) => {
+      usu = doc.data();
+    })
+    console.log(usu);
+    if(usu == null){
+      saber("doctor");
+      getWithQ((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          usu = doc.data();
+        })
+        console.log(usu);
+        if(usu == null){
+          saber("recepcionista");
+          getWithQ((snapshot) => {
+            snapshot.docs.forEach((doc) => {
+              usu = doc.data();
+            })
+            if(usu == null){
+              saber("admin");
+              getWithQ((snapshot) => {
               snapshot.docs.forEach((doc) => {
-                usu = doc.data();
+                  usu = doc.data();
               })
+              quienEs = "admin";
+              console.log(quienEs);
+              Inicio();
+              });
+            }else{
               quienEs = "recepcionista";
               console.log(quienEs);
               Inicio();
-            });
-          }else{
-            quienEs = "doctor";
-            console.log(quienEs);
-            Inicio();
-          }
-        });
-      }
-      else{
-        quienEs = "paciente";
-        console.log(quienEs);
-        Inicio();
-      }
-    });
-  
-  }
+            }
+          });
+        }else{
+          quienEs = "doctor";
+          console.log(quienEs);
+          Inicio();
+        }
+      });
+    }
+    else{
+      quienEs = "paciente";
+      console.log(quienEs);
+      Inicio();
+    }
+  });
+
+}
   async function Inicio(){
     console.log(crearVer.dataset.id)
     if(crearVer.dataset.id === "ver"){
@@ -167,7 +179,11 @@ async function saberQuien(){
                         <td scope="row">${cita.fecha}</td>
                         <td>${cita.hora}</td>
                         <td>${docId.nombre}</td>
-                        <td><img src="../img/editar.png" alt="icono editar cita"></td>
+                        <td class="regEnt">
+                          <button type="submit" class="citaIcono2 oculta">
+                              <img data-id="${cita.id} " src="../img/editar.png" alt="icono editar cita">
+                          </button>   
+                        </td>
                       </tr>
                       `
                       citas.innerHTML=html;
