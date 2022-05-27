@@ -30,17 +30,20 @@ table {
     outline-color: black;
 }
 
+.border-end-secondary {
+    border-right: solid 1px #9e9e9e;
+}
+
 th {
-    margin-left: -30px;
+    padding-left: 150px;
 }
 
 td {
     width: 20%;
 }
 
-.btncabecera {
-    border: none; 
-    background: none;
+.aling-center {
+    margin-left: 20%;
 }
 
 .citaIcono {
