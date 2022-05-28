@@ -16,7 +16,7 @@ import { getFirestore,
     orderBy,
     limit 
  } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-firestore.js";
- import { getAuth, sendEmailVerification, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js";
+ import { getAuth, sendEmailVerification, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -287,10 +287,32 @@ async function register(tabl){
 
                     sendEmailVerification(user).then(() =>{
                         if(form.dataset.id === "doctor"){
-
                             addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, numeroEsp, true, tabl);
+                            signInWithEmailAndPassword(auth, "alenehospital@gmail.com", "adminA6")
+                            .then((userCredential) => {
+                                MSJOK();
+                            })
+                            .catch((error) => {
+                                const errorCode = error.code;
+                                const errorMessage = error.message;
+                                MSJERROR();
+                            });
+                            
                         }else{
-                            addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, 0, false, tabl);
+                            if(form.dataset.id === "recepcionista"){
+                                signInWithEmailAndPassword(auth, "alenehospital@gmail.com", "adminA6")
+                                .then((userCredential) => {
+                                    MSJOK();
+                                })
+                                .catch((error) => {
+                                    const errorCode = error.code;
+                                    const errorMessage = error.message;
+                                    MSJERROR();
+                                });
+                                
+                            }else{
+                                addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, 0, false, tabl);
+                            }
                         }
 
                     });

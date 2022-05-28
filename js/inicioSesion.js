@@ -94,8 +94,7 @@ form.addEventListener("submit", async e => {
                 }else if(form.dataset.id === "recepcionista"){
                     window.location.assign("verCitasRec.html");
                 }else if(form.dataset.id === "admin"){
-                    //tiene que terminar
-                    //window.location.assign();
+                    window.location.assign("registroDoctor.html");
                 }
 
                 MSJOK();

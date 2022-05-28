@@ -63,7 +63,7 @@ window.addEventListener("DOMContentLoaded", async ()=>{
     //Coger todos los datos de una lista
     querySnapshot.forEach(doc =>{
         let cita = doc;
-        getSmth("paciente", "id", cita.data().idPaciente);
+        getSmth("doctor", "id", cita.data().idDoc);
         let elDoctor = null;
         getWithQ((snapshot) => {
             snapshot.docs.forEach((doc) => {
@@ -81,24 +81,40 @@ window.addEventListener("DOMContentLoaded", async ()=>{
                     snapshot.docs.forEach((doc) => {
                         elPaciente = doc.data();
                     })
-                    html += `
-                      <tr>
-                          <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
-                          <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
-                          <td>${laEspecialidad.nombre}</td>
-                          <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
-                          <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
-                          <td class="regEnt">
-                          <button data-id="${cita.id} data-cita="${cita.data().id}" type="submit" class="citaIcono oculta">
-                            <img " src="../img/registra_entrada.png" alt="icono registra entrada">
-                          </button>   
-                          </td>
-                      </tr>
-                      `
-                    lista.innerHTML=html;
-                })
+                    getSmth("solicita_despacho", "fecha", cita.data().fecha);
+                    let elSolicita = null;
+                    getWithQ((snapshot) => {
+                        snapshot.docs.forEach((doc) => {
+                            elSolicita = doc.data();
+                        })
+                        getSmth("despacho", "id", elSolicita.idDespacho);
+                        let elDespach = null;
+                        getWithQ((snapshot) => {
+                          snapshot.docs.forEach((doc) => {
+                              elSolicita = doc.data();
+                            })
+                            let elDespacho = null;
+                            html += `
+                              <tr>
+                                  <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                  <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                  <td>${laEspecialidad.nombre}</td>
+                                  <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
+                                  <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                  <td class="regEnt">
+                                  <button data-id="${cita.id} data-cita="${cita.data().id}" type="submit" class="citaIcono oculta">
+                                    <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                  </button>   
+                                  </td>
+                              </tr>
+                              `
+                            lista.innerHTML=html;
+                        })  
+                      })
+                  })
+
             })
         })
-    })
-})
+      })
+  })
 })  
