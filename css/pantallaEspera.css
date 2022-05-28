@@ -1,0 +1,10 @@
+table {
+    margin-top: 20px;
+    outline-style: solid;
+    outline-width: 2px;
+    outline-color: black;
+}
+
+.border-end-secondary {
+    border-right: solid 1px #9e9e9e;
+}
