@@ -121,7 +121,7 @@ async function saberQuien(){
         <option selected>Doctor</option>
       `
       filtroDoctor.innerHTML+=a;
-      })
+    })
     saber("paciente");
     getWithQ((snapshot) => {
       snapshot.docs.forEach((doc) => {

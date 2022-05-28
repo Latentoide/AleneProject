@@ -59,10 +59,46 @@ export const getSmth = (tabla, campo, nomrbeEsp) => {
 const lista = document.getElementById("lista");
 
 window.addEventListener("DOMContentLoaded", async ()=>{
-    onGetCitas((querySnapshot) => {
-        querySnapshot.forEach(doc =>{
-            const cita = doc.data();
-            
+  onGetCitas((querySnapshot) =>{
+    //Coger todos los datos de una lista
+    querySnapshot.forEach(doc =>{
+        let cita = doc;
+        getSmth("paciente", "id", cita.data().idPaciente);
+        let elDoctor = null;
+        getWithQ((snapshot) => {
+            snapshot.docs.forEach((doc) => {
+                elDoctor = doc.data();
+            })
+            getSmth("especialidad", "id", elDoctor.idEspecialidad);
+            let laEspecialidad = null;
+            getWithQ((snapshot) => {
+                snapshot.docs.forEach((doc) => {
+                    laEspecialidad = doc.data();
+                })
+                getSmth("paciente", "id", cita.data().idPaciente);
+                let elPaciente = null;
+                getWithQ((snapshot) => {
+                    snapshot.docs.forEach((doc) => {
+                        elPaciente = doc.data();
+                    })
+                    html += `
+                      <tr>
+                          <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                          <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                          <td>${laEspecialidad.nombre}</td>
+                          <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
+                          <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                          <td class="regEnt">
+                          <button data-id="${cita.id} data-cita="${cita.data().id}" type="submit" class="citaIcono oculta">
+                            <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                          </button>   
+                          </td>
+                      </tr>
+                      `
+                    lista.innerHTML=html;
+                })
+            })
         })
     })
+})
 })  
