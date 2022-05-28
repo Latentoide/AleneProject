@@ -76,6 +76,10 @@ export const getSmth = (tabla, campo, nomrbeEsp) => {
   q = query(collection(db, tabla), where( campo,"==", nomrbeEsp))
 }
 
+export const getLaCita = (id) => {
+    q = query(collection(db, "cita"), where( "id","==", id))
+}
+
 export const getDesp = (idDocss, fechaas) => {
     q = query(collection(db, "solicita_despacho"), where("fecha","==", fechaas), where("idDoc", "==", idDocss))
   }
@@ -104,7 +108,7 @@ const citas = document.getElementById("citasRec");
 
 const crearVer = document.getElementById("alejandro");
 
-
+const btnRecargar = document.getElementById("recarga");
 
 async function saberQuien(){
     onGetDoctores((querySnapshot) => {
@@ -172,13 +176,13 @@ async function saberQuien(){
     });
   
   }
-  async function Inicio(){
+async function Inicio(){
+    let html = "";  
     console.log(crearVer.dataset.id)
     if(crearVer.dataset.id === "ver"){
       if(quienEs == "recepcionista"){
         if(isOn){
             MSJCUENTA();
-            let html = "";  
             let docCita = null;
             onGetCitas((querySnapshot) =>{
                 //Coger todos los datos de una lista
@@ -217,93 +221,81 @@ async function saberQuien(){
                                         snapshot.docs.forEach((doc) => {
                                             elDespacho = doc.data();
                                         })
-                                        if(elDespacho == null){
-                                            html += `
-                                            <tr>
-                                                <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
-                                                <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
-                                                <td>${laEspecialidad.nombre}</td>
-                                                <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
-                                                <td>Piso:0 Puerta:0</td>
-                                                <td class="regEnt">
-                                                    <button type="submit" class="citaIcono oculta">
-                                                        <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
-                                                    </button>   
-                                                </td>
-                                            </tr>
-                                            `
-                                        }else{
-                                            if(elDoctor.id == elSolicita.idDoc){
-                                                html += `
-                                                <tr>
-                                                    <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
-                                                    <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
-                                                    <td>${laEspecialidad.nombre}</td>
-                                                    <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
-                                                    <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
-                                                    <td class="regEnt">
-                                                        <button data-id="${cita.id} data-cita="${cita.data().id}" type="submit" class="citaIcono oculta">
-                                                            <img " src="../img/registra_entrada.png" alt="icono registra entrada">
-                                                        </button>   
-                                                    </td>
-                                                </tr>
-                                                `
+                                        
+                                        if(!as){
+                                            if(cita.data().entrada == true){
+                                                if(elDespacho == null){
+                                                    html += `
+                                                    <tr>
+                                                        <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                                        <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                                        <td>${laEspecialidad.nombre}</td>
+                                                        <td>${elPaciente.nombre}</td>
+                                                        <td>Piso:0 Puerta:0</td>
+                                                        <td class="regEnt">
+                                                            <button type="button" class="citaIcono oculta">
+                                                                <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                            </button>   
+                                                        </td>
+                                                    </tr>
+                                                    `
+                                                }else{
+                                                    if(elDoctor.id == elSolicita.idDoc){
+                                                        html += `
+                                                        <tr>
+                                                            <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                                            <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                                            <td>${laEspecialidad.nombre}</td>
+                                                            <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
+                                                            <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                                            <td class="regEnt">
+                                                                <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono oculta">
+                                                                    <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                                </button>   
+                                                            </td>
+                                                        </tr>
+                                                        `
+                                                    }
+                                                }
+                                            }else{
+                                                if(elDespacho == null){
+                                                    html += `
+                                                    <tr>
+                                                        <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                                        <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                                        <td>${laEspecialidad.nombre}</td>
+                                                        <td>${elPaciente.nombre}</td>
+                                                        <td>Piso:0 Puerta:0</td>
+                                                        <td class="regEnt">
+                                                            <button type="button" class="citaIcono oculta">
+                                                                <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                            </button>   
+                                                        </td>
+                                                    </tr>
+                                                    `
+                                                }else{
+                                                    if(elDoctor.id == elSolicita.idDoc){
+                                                        html += `
+                                                        <tr>
+                                                            <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                                            <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                                            <td>${laEspecialidad.nombre}</td>
+                                                            <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
+                                                            <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                                            <td class="regEnt">
+                                                                <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono oculta">
+                                                                    <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                                </button>   
+                                                            </td>
+                                                        </tr>
+                                                        `
+                                                    }
+                                                }
                                             }
                                         }
                                         citas.innerHTML=html;
                                     })
                                 })
-                            })
-                        })
-                    })
-                })
-                const btnChange = citas.querySelectorAll('.citaIcono');
-                btnChange.forEach(btn => {
-                    console.log(btnChange)
-                    btn.addEventListener('load', ({target:{dataset}}) => {
-                        getSmth("cita", "id", dataset.cita);
-                        let cita = null;
-                        getWithQ((snapshot) => {
-                            snapshot.docs.forEach((doc) => {
-                                cita = doc.data();
-                            })
-                            if(cita.entrada){
-                                btn.classList().add("oculta");
-                            }
-                        })
-                    })
-                    btn.addEventListener('onClick', ({target:{dataset}}) => {
-                        getSmth("cita", "id", dataset.cita);
-                        let cita = null;
-                        getWithQ((snapshot) => {
-                            snapshot.docs.forEach((doc) => {
-                                cita = doc.data();
-                            })
-                            Swal.fire({
-                                title: '¿Confirmar entrada?',
-                                text: "No podrás revertir este proceso",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Confirmar!'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    updateDoc(dataset.id, {
-                                        entrada : true,
-                                        fecha : cita.fecha,
-                                        hora : cita.hora,
-                                        id : cita.id,
-                                        idDoc : cita.idDoc,
-                                        idPaciente : cita.idPaciente,
-                                        observacion : cita.observacion,    
-                                    }) ;
-                                    Swal.fire(
-                                        'Confirmado!',
-                                        'Se ha registrado la entrada del paciente.',
-                                        'success'
-                                    )
-                                }
                             })
                         })
                     })
@@ -315,17 +307,18 @@ async function saberQuien(){
 
     
 }
+let as = false;
 let doctorFiltrado = null;
 filtroDoctor.addEventListener("change", async (e)=>{
     e.preventDefault();
-
+    let html = "";  
     getSmth("doctor", "usuario", filtroDoctor.value);
 
     getWithQ((snapshot) => {
         snapshot.docs.forEach((doc) => {
             doctorFiltrado = doc.data();
         })
-        let html = "";  
+
             let docCita = null;
             onGetCitas((querySnapshot) =>{
                 //Coger todos los datos de una lista
@@ -364,37 +357,74 @@ filtroDoctor.addEventListener("change", async (e)=>{
                                         snapshot.docs.forEach((doc) => {
                                             elDespacho = doc.data();
                                         })
-                                        if(elDespacho == null){
-                                            html += `
-                                            <tr>
-                                                <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
-                                                <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
-                                                <td>${laEspecialidad.nombre}</td>
-                                                <td>${elPaciente.nombre}</td>
-                                                <td>Piso:0 Puerta:0</td>
-                                                <td class="regEnt">
-                                                    <button type="submit" class="citaIcono oculta">
-                                                        <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
-                                                    </button>   
-                                                </td>
-                                            </tr>
-                                            `
-                                        }else{
-                                            if(elDoctor.id == elSolicita.idDoc && doctorFiltrado.id == elDoctor.id){
+                                        console.log("hi");
+                                        if(cita.data().entrada == true){
+                                            if(elDespacho == null){
                                                 html += `
                                                 <tr>
                                                     <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
                                                     <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
                                                     <td>${laEspecialidad.nombre}</td>
-                                                    <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
-                                                    <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                                    <td>${elPaciente.nombre}</td>
+                                                    <td>Piso:0 Puerta:0</td>
                                                     <td class="regEnt">
-                                                        <button data-id="${cita.id} data-cita="${cita.data().id}" type="submit" class="citaIcono oculta">
-                                                            <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                        <button type="button" class="citaIcono oculta">
+                                                            <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
                                                         </button>   
                                                     </td>
                                                 </tr>
                                                 `
+                                            }else{
+                                                if(elDoctor.id == elSolicita.idDoc && doctorFiltrado.id == elDoctor.id){
+                                                    html += `
+                                                    <tr>
+                                                        <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                                        <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                                        <td>${laEspecialidad.nombre}</td>
+                                                        <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
+                                                        <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                                        <td class="regEnt">
+                                                            <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono oculta">
+                                                                <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                            </button>   
+                                                        </td>
+                                                    </tr>
+                                                    `
+                                                }
+                                            }
+                                        }else{
+                                            if(elDespacho == null){
+                                                html += `
+                                                <tr>
+                                                    <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                                    <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                                    <td>${laEspecialidad.nombre}</td>
+                                                    <td>${elPaciente.nombre}</td>
+                                                    <td>Piso:0 Puerta:0</td>
+                                                    <td class="regEnt">
+                                                        <button type="submit" class="citaIcono oculta">
+                                                            <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                        </button>   
+                                                    </td>
+                                                </tr>
+                                                `
+                                            }else{
+                                                if(elDoctor.id == elSolicita.idDoc && doctorFiltrado.id == elDoctor.id){
+                                                    html += `
+                                                    <tr>
+                                                        <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                                        <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                                        <td>${laEspecialidad.nombre}</td>
+                                                        <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
+                                                        <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                                        <td class="regEnt">
+                                                            <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono oculta">
+                                                                <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                            </button>   
+                                                        </td>
+                                                    </tr>
+                                                    `
+                                                }
                                             }
                                         }
                                         citas.innerHTML=html;
@@ -404,58 +434,44 @@ filtroDoctor.addEventListener("change", async (e)=>{
                         })
                     })
                 })
-                const btnChange = citas.querySelectorAll('.citaIcono');
-                btnChange.forEach(btn => {
-                    console.log(btnChange)
-                    btn.addEventListener('load', ({target:{dataset}}) => {
-                        getSmth("cita", "id", dataset.cita);
-                        let cita = null;
-                        getWithQ((snapshot) => {
-                            snapshot.docs.forEach((doc) => {
-                                cita = doc.data();
-                            })
-                            if(cita.entrada){
-                                btn.classList().add("oculta");
-                            }
-                        })
-                    })
-                    btn.addEventListener('onClick', ({target:{dataset}}) => {
-                        getSmth("cita", "id", dataset.cita);
-                        let cita = null;
-                        getWithQ((snapshot) => {
-                            snapshot.docs.forEach((doc) => {
-                                cita = doc.data();
-                            })
-                            Swal.fire({
-                                title: '¿Confirmar entrada?',
-                                text: "No podrás revertir este proceso",
-                                icon: 'warning',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Confirmar!'
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    updateDoc(dataset.id, {
-                                        entrada : true,
-                                        fecha : cita.fecha,
-                                        hora : cita.hora,
-                                        id : cita.id,
-                                        idDoc : cita.idDoc,
-                                        idPaciente : cita.idPaciente,
-                                        observacion : cita.observacion,    
-                                    }) ;
-                                    Swal.fire(
-                                        'Confirmado!',
-                                        'Se ha registrado la entrada del paciente.',
-                                        'success'
-                                    )
-                                }
-                            })
-                        })
-                    })
-                })
             })
+    })
+})
+btnRecargar.addEventListener("click", (e) => {
+    as= false;
+    e.preventDefault();
+    const btnChange = citas.querySelectorAll('.citaIcono');
+        btnChange.forEach(btn => {
+            let theSamebool = false;
+            if(!theSamebool){
+                getSmth("cita", "id", parseInt(btn.dataset.cita));
+                let cita = null;
+                getWithQ((snapshot) => {
+                    snapshot.docs.forEach((doc) => {
+                        cita = doc.data();
+                    })
+                    if(!cita.entrada){
+                        btn.classList.remove('oculta')
+                        btn.addEventListener('click',  (s) => {
+                            s.preventDefault();
+                            let theTrue = false;
+                            getSmth("cita", "id", parseInt(btn.dataset.cita));
+                            let cita = null;
+                            getWithQ((snapshot) => {
+                                snapshot.docs.forEach((doc) => {
+                                    cita = doc.data();
+                                })
+                                if(!theTrue){
+                                    a(btn.dataset.id, cita);
+                                    theTrue =true;
+                                    theSamebool = true;
+                                    as = true;
+                                }
+                            })                                  
+                         })
+                    }
+                })  
+            }
     })
 })
 
@@ -464,13 +480,46 @@ window.addEventListener('DOMContentLoaded', async () => {
       if (user != null) {
         user = auth.currentUser;
         email = user.email;
-        saberQuien();
+        if(!as){
+            saberQuien();
+        }
       } else {
         isOn = false;
       }
     });
 })
 
+async function a(id, cita){
+    Swal.fire({
+        title: '¿Confirmar entrada?',
+        text: "No podrás revertir este proceso",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Confirmar!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            updateRes(id, {
+                entrada : true,
+                fecha : cita.fecha,
+                hora : cita.hora,
+                id : cita.id,
+                idDoc : cita.idDoc,
+                idPaciente : cita.idPaciente,
+                observacion : cita.observacion,    
+                }) ;
+            function ass (){
+                Swal.fire(
+                    'Confirmado!',
+                    'Se ha registrado la entrada del paciente.',
+                    'success'
+                )
+            }
+            ass();
+        }
+    })
+}
 
 function MSJCUENTA(){
     let timerInterval

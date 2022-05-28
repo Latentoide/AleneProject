@@ -15,7 +15,6 @@ import { getFirestore,
     orderBy,
     limit 
  } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-firestore.js";
- import { getAuth, sendEmailVerification, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -35,6 +34,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 var q = null;
+const db = getFirestore();
 
 export const getLastOf = (tabl) => {
   q = query(collection(db, tabl), orderBy("id", "desc"), limit(1) );
@@ -49,21 +49,31 @@ export const saber = (tbl) => {
 }
 
 export const onGetCitas = (callback) => {
-  onSnapshot(collection(db,"citas"),callback);
+  onSnapshot(collection(db,"cita"),callback);
 }
 
 export const getSmth = (tabla, campo, nomrbeEsp) => {
   q = query(collection(db, tabla), where( campo,"==", nomrbeEsp))
 }
 
+export const getCitas = () => {
+  q = query(collection(db, "cita"), where( "entrada","==", true), orderBy("hora", "asc"))
+}
+
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2,"0")+'-'+today.getDate().toString().padStart(2,"0");
+
 const lista = document.getElementById("lista");
 
 window.addEventListener("DOMContentLoaded", async ()=>{
-  onGetCitas((querySnapshot) =>{
-    //Coger todos los datos de una lista
-    querySnapshot.forEach(doc =>{
-        let cita = doc;
-        getSmth("doctor", "id", cita.data().idDoc);
+  getCitas();
+  getWithQ((snapshot) => {
+    let cita = null;
+    snapshot.docs.forEach((doc) => {
+      cita = doc.data();
+    })
+    let html = "";
+        getSmth("doctor", "id", cita.idDoc);
         let elDoctor = null;
         getWithQ((snapshot) => {
             snapshot.docs.forEach((doc) => {
@@ -75,46 +85,43 @@ window.addEventListener("DOMContentLoaded", async ()=>{
                 snapshot.docs.forEach((doc) => {
                     laEspecialidad = doc.data();
                 })
-                getSmth("paciente", "id", cita.data().idPaciente);
+                getSmth("paciente", "id", cita.idPaciente);
                 let elPaciente = null;
                 getWithQ((snapshot) => {
                     snapshot.docs.forEach((doc) => {
                         elPaciente = doc.data();
                     })
-                    getSmth("solicita_despacho", "fecha", cita.data().fecha);
-                    let elSolicita = null;
-                    getWithQ((snapshot) => {
-                        snapshot.docs.forEach((doc) => {
-                            elSolicita = doc.data();
-                        })
-                        getSmth("despacho", "id", elSolicita.idDespacho);
-                        let elDespach = null;
-                        getWithQ((snapshot) => {
+                    if(cita.fecha == date){
+                      getSmth("solicita_despacho", "fecha", date);
+                      let elSolicita = null;
+                      getWithQ((snapshot) => {
                           snapshot.docs.forEach((doc) => {
                               elSolicita = doc.data();
-                            })
-                            let elDespacho = null;
-                            html += `
-                              <tr>
-                                  <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
-                                  <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
-                                  <td>${laEspecialidad.nombre}</td>
-                                  <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
-                                  <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
-                                  <td class="regEnt">
-                                  <button data-id="${cita.id} data-cita="${cita.data().id}" type="submit" class="citaIcono oculta">
-                                    <img " src="../img/registra_entrada.png" alt="icono registra entrada">
-                                  </button>   
-                                  </td>
-                              </tr>
-                              `
-                            lista.innerHTML=html;
-                        })  
-                      })
+                          })
+                          console.log(elSolicita.idDespacho);
+                          getSmth("despacho", "id", elSolicita.idDespacho);
+                          let elDespacho = null;
+                          getWithQ((snapshot) => {
+                            snapshot.docs.forEach((doc) => {
+                              elDespacho = doc.data();
+                              })
+                              html += `
+                                <tr data-id="${cita.id}">
+                                    <td scope="row">${cita.hora}</td>
+                                    <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                    <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
+                                    <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                </tr>
+                                `
+                              lista.innerHTML=html;
+                          })  
+                        })
+                    }
+
                   })
 
             })
         })
       })
   })
-})  
+
