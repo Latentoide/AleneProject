@@ -358,72 +358,74 @@ filtroDoctor.addEventListener("change", async (e)=>{
                                             elDespacho = doc.data();
                                         })
                                         console.log("hi");
-                                        if(cita.data().entrada == true){
-                                            if(elDespacho == null){
-                                                html += `
-                                                <tr>
-                                                    <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
-                                                    <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
-                                                    <td>${laEspecialidad.nombre}</td>
-                                                    <td>${elPaciente.nombre}</td>
-                                                    <td>Piso:0 Puerta:0</td>
-                                                    <td class="regEnt">
-                                                        <button type="button" class="citaIcono oculta">
-                                                            <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
-                                                        </button>   
-                                                    </td>
-                                                </tr>
-                                                `
-                                            }else{
-                                                if(elDoctor.id == elSolicita.idDoc && doctorFiltrado.id == elDoctor.id){
+                                        if(!as){
+                                            if(cita.data().entrada == true){
+                                                if(elDespacho == null){
                                                     html += `
                                                     <tr>
                                                         <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
                                                         <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
                                                         <td>${laEspecialidad.nombre}</td>
-                                                        <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
-                                                        <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                                        <td>${elPaciente.nombre}</td>
+                                                        <td>Piso:0 Puerta:0</td>
                                                         <td class="regEnt">
-                                                            <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono oculta">
-                                                                <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                            <button type="button" class="citaIcono oculta">
+                                                                <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
                                                             </button>   
                                                         </td>
                                                     </tr>
                                                     `
+                                                }else{
+                                                    if(elDoctor.id == elSolicita.idDoc && doctorFiltrado.id == elDoctor.id){
+                                                        html += `
+                                                        <tr>
+                                                            <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                                            <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                                            <td>${laEspecialidad.nombre}</td>
+                                                            <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
+                                                            <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                                            <td class="regEnt">
+                                                                <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono oculta">
+                                                                    <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                                </button>   
+                                                            </td>
+                                                        </tr>
+                                                        `
+                                                    }
                                                 }
-                                            }
-                                        }else{
-                                            if(elDespacho == null){
-                                                html += `
-                                                <tr>
-                                                    <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
-                                                    <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
-                                                    <td>${laEspecialidad.nombre}</td>
-                                                    <td>${elPaciente.nombre}</td>
-                                                    <td>Piso:0 Puerta:0</td>
-                                                    <td class="regEnt">
-                                                        <button type="submit" class="citaIcono oculta">
-                                                            <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
-                                                        </button>   
-                                                    </td>
-                                                </tr>
-                                                `
                                             }else{
-                                                if(elDoctor.id == elSolicita.idDoc && doctorFiltrado.id == elDoctor.id){
+                                                if(elDespacho == null){
                                                     html += `
                                                     <tr>
                                                         <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
                                                         <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
                                                         <td>${laEspecialidad.nombre}</td>
-                                                        <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
-                                                        <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                                        <td>${elPaciente.nombre}</td>
+                                                        <td>Piso:0 Puerta:0</td>
                                                         <td class="regEnt">
-                                                            <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono oculta">
-                                                                <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                            <button type="submit" class="citaIcono oculta">
+                                                                <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
                                                             </button>   
                                                         </td>
                                                     </tr>
                                                     `
+                                                }else{
+                                                    if(elDoctor.id == elSolicita.idDoc && doctorFiltrado.id == elDoctor.id){
+                                                        html += `
+                                                        <tr>
+                                                            <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                                            <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                                            <td>${laEspecialidad.nombre}</td>
+                                                            <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
+                                                            <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                                            <td class="regEnt">
+                                                                <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono oculta">
+                                                                    <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                                </button>   
+                                                            </td>
+                                                        </tr>
+                                                        `
+                                                    }
                                                 }
                                             }
                                         }
