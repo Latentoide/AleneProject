@@ -190,127 +190,130 @@ async function Inicio(){
                 querySnapshot.forEach(doc =>{
                     cita = doc;
                     if(cita.data().fecha === date){
-                        getSmth("doctor", "id", cita.data().idDoc);
-                        let elDoctor = null;
-                        getWithQ((snapshot) => {
-                            snapshot.docs.forEach((doc) => {
-                                elDoctor = doc.data();
-                            })
-                            getSmth("especialidad", "id", elDoctor.idEspecialidad);
-                            let laEspecialidad = null;
-                            getWithQ((snapshot) => {
-                                snapshot.docs.forEach((doc) => {
-                                    laEspecialidad = doc.data();
-                                })
-                                getSmth("paciente", "id", cita.data().idPaciente);
-                                let elPaciente = null;
-                                getWithQ((snapshot) => {
-                                    snapshot.docs.forEach((doc) => {
-                                        elPaciente = doc.data();
-                                    })
-    
-                                    //getDesp("solicita_despacho", "2022-05-27", 1);
-                                    //getSmth("solicita_despacho", "idDoc", elDoctor.id);
-                                    console.log(cita.data().fecha)
-                                    getSmth("solicita_despacho", "fecha", cita.data().fecha);
-                                    let elSolicita = null;
-                                    getWithQ((snapshot) => {
-                                        snapshot.docs.forEach((doc) => {
-                                            elSolicita = doc.data();
-                                            getSmth("despacho", "id", elSolicita.idDespacho);
-                                        let elDespacho = null;
-                                        getWithQ((snapshot) => {
-                                            snapshot.docs.forEach((doc) => {
-                                                elDespacho = doc.data();
-                                            })
-                                            
-                                                if(cita.data().entrada == true){
-
-                                                    if(elDespacho == null){
-                                                        html += `
-                                                        <tr>
-                                                            <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
-                                                            <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
-                                                            <td>${laEspecialidad.nombre}</td>
-                                                            <td>${elPaciente.nombre}</td>
-                                                            <td>Piso:0 Puerta:0</td>
-                                                            <td class="regEnt">
-                                                                <button type="button" class="citaIcono">
-                                                                    <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
-                                                                </button>   
-                                                            </td>
-                                                        </tr>
-                                                        `
-                                                    }else{
-                                                        if(elDoctor.id == elSolicita.idDoc){
-                                                            html += `
-                                                            <tr>
-                                                                <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
-                                                                <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
-                                                                <td>${laEspecialidad.nombre}</td>
-                                                                <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
-                                                                <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
-                                                                <td class="regEnt">
-                                                                    <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono">
-                                                                        <img " src="../img/registra_entrada.png" alt="icono registra entrada">
-                                                                    </button>   
-                                                                </td>
-                                                            </tr>
-                                                            `
-                                                        }
-                                                    }
-                                                }else{
-                                                    if(elDespacho == null){
-                                                        html += `
-                                                        <tr>
-                                                            <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
-                                                            <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
-                                                            <td>${laEspecialidad.nombre}</td>
-                                                            <td>${elPaciente.nombre}</td>
-                                                            <td>Piso:0 Puerta:0</td>
-                                                            <td class="regEnt">
-                                                                <button type="button" class="citaIcono">
-                                                                    <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
-                                                                </button>   
-                                                            </td>
-                                                        </tr>
-                                                        `
-                                                    }else{
-                                                        if(elDoctor.id == elSolicita.idDoc){
-                                                            html += `
-                                                            <tr>
-                                                                <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
-                                                                <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
-                                                                <td>${laEspecialidad.nombre}</td>
-                                                                <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
-                                                                <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
-                                                                <td class="regEnt">
-                                                                    <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono oculta">
-                                                                        <img " src="../img/registra_entrada.png" alt="icono registra entrada">
-                                                                    </button>   
-                                                                </td>
-                                                            </tr>
-                                                            `
-                                                        }
-                                                    }
-                                                }
-                                            
-                                            citas.innerHTML=html;
-                                        })
-                                        })
-                                        
-                                    })
-                                })
-                            })
-                        })
+                        asco(cita);
                     }
-                    
                 })
             })
         }
       }
     }
 
+    
+}
+function asco(cita){
+    getSmth("doctor", "id", cita.data().idDoc);
+    let elDoctor = null;
+    getWithQ((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+            elDoctor = doc.data();
+        })
+        getSmth("especialidad", "id", elDoctor.idEspecialidad);
+        let laEspecialidad = null;
+        getWithQ((snapshot) => {
+            snapshot.docs.forEach((doc) => {
+                laEspecialidad = doc.data();
+            })
+            getSmth("paciente", "id", cita.data().idPaciente);
+            let elPaciente = null;
+            getWithQ((snapshot) => {
+                snapshot.docs.forEach((doc) => {
+                    elPaciente = doc.data();
+                })
+                //getDesp("solicita_despacho", "2022-05-27", 1);
+                //getSmth("solicita_despacho", "idDoc", elDoctor.id);
+                console.log(cita.data().fecha)
+                getSmth("solicita_despacho", "fecha", cita.data().fecha);
+                let elSolicita = null;
+                getWithQ((snapshot) => {
+                    snapshot.docs.forEach((doc) => {
+                        elSolicita = doc.data();
+
+                    })
+                    getSmth("despacho", "id", elSolicita.idDespacho);
+                    let elDespacho = null;
+                    getWithQ((snapshot) => {
+                        snapshot.docs.forEach((doc) => {
+                            elDespacho = doc.data();
+                        })
+
+                            if(cita.data().entrada == true){
+
+                                if(elDespacho == null){
+                                    html += `
+                                    <tr>
+                                        <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                        <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                        <td>${laEspecialidad.nombre}</td>
+                                        <td>${elPaciente.nombre}</td>
+                                        <td>Piso:0 Puerta:0</td>
+                                        <td class="regEnt">
+                                            <button type="button" class="citaIcono">
+                                                <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                            </button>   
+                                        </td>
+                                    </tr>
+                                    `
+                                }else{
+                                    if(elDoctor.id == elSolicita.idDoc){
+                                        html += `
+                                        <tr>
+                                            <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                            <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                            <td>${laEspecialidad.nombre}</td>
+                                            <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
+                                            <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                            <td class="regEnt">
+                                                <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono">
+                                                    <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                </button>   
+                                            </td>
+                                        </tr>
+                                        `
+                                    }
+                                }
+                            }else{
+                                if(elDespacho == null){
+                                    html += `
+                                    <tr>
+                                        <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                        <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                        <td>${laEspecialidad.nombre}</td>
+                                        <td>${elPaciente.nombre}</td>
+                                        <td>Piso:0 Puerta:0</td>
+                                        <td class="regEnt">
+                                            <button type="button" class="citaIcono">
+                                                <img data-id="${cita.id} " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                            </button>   
+                                        </td>
+                                    </tr>
+                                    `
+                                }else{
+                                    if(elDoctor.id == elSolicita.idDoc){
+                                        html += `
+                                        <tr>
+                                            <td scope="row">${cita.data().fecha} ${cita.data().hora}</td>
+                                            <td>${elDoctor.nombre} ${elDoctor.apellidos}</td>
+                                            <td>${laEspecialidad.nombre}</td>
+                                            <td>${elPaciente.nombre} ${elPaciente.apellidos}</td>
+                                            <td>Piso:${elDespacho.piso} Puerta:${elDespacho.puerta}</td>
+                                            <td class="regEnt">
+                                                <button data-id="${cita.id}" data-cita="${cita.data().id}" type="button" class="citaIcono oculta">
+                                                    <img " src="../img/registra_entrada.png" alt="icono registra entrada">
+                                                </button>   
+                                            </td>
+                                        </tr>
+                                        `
+                                    }
+                                }
+                            }
+                        
+                        citas.innerHTML=html;
+                    })
+                    })
+                    
+                })
+            })
+        })
     
 }
 let as = false;
