@@ -150,6 +150,7 @@ async function saberQuien(){
 }
 let cita = null;
 let html = null;
+let desp = null;
 async function Inicio(){
   if(crearVer.dataset.id === "ver"){
     if(quienEs == "paciente"){
@@ -243,60 +244,67 @@ async function Inicio(){
         `
           selectdoctor.innerHTML+=a;
         })
-
-        let idPac = null;
-        getSmth("paciente", "email", email)
+        getSmth("cita", "idPaciente",usu.id);
         getWithQ((snapshot) => {
           snapshot.docs.forEach((doc) => {
-            idPac = doc.data();
-          })
-        })
-          onGetCitas((querySnapshot) =>{
-            querySnapshot.forEach(doc =>{
-              cita = doc.data();
+            cita = doc.data();
+            function doThat(cita){
+              let docId = null;
+              let espId = null;
+              if(cita.fecha >= date){
+                getSmth("doctor", "id",cita.idDoc);
+                getWithQ((snapshot) => {
+                  snapshot.docs.forEach((doc) => {
+                    docId = doc.data();
 
-                let docId = null;
-                let espId = null;
-                if(cita.fecha >= date){
-                  getSmth("doctor", "id",cita.idDoc);
+                  })
+                  getSmth("especialidad", "id",docId.idEspecialidad);
                   getWithQ((snapshot) => {
                     snapshot.docs.forEach((doc) => {
-                      docId = doc.data();
-                      getSmth("especialidad", "id",docId.idEspecialidad);
-                    console.log(cita);
+                      espId = doc.data();
+                    })
+                    getSmth("solicita_despacho", "idDoc",docId.id);
+                    let despSol = null;
                     getWithQ((snapshot) => {
                       snapshot.docs.forEach((doc) => {
-                        espId = doc.data();
+                        despSol = doc.data();
+                      })
+                      getSmth("despacho", "id",despSol.idDespacho);
+
+                      getWithQ((snapshot) => {
+                        snapshot.docs.forEach((doc) => {
+                          desp = doc.data();
+                        })
                         a();
                       })
-                      
                     })
-                    })
-                  });
-                  function a (){
-                    html += `
-                    <tr>
-                      <td scope="row">${cita.fecha} ${cita.hora}</td>
-                      <td>${docId.nombre}</td>
-                      <td>${espId.nombre}</td>
-                      <td>texto plano</td>
-                      <td class="regEnt">
-                        <button type="submit" class="citaIcono2 oculta">
-                            <img data-id="${cita.id} " src="../img/editar.png" alt="icono editar cita">
-                        </button>   
-                      </td>
-                    </tr>
-                    `
-                    citas.innerHTML=html;
-                  }   
-                  
-                }
+                  })
+                });
+
+                function a (){
+                  html += `
+                  <tr>
+                    <td scope="row">${cita.fecha} ${cita.hora}</td>
+                    <td>${docId.nombre}</td>
+                    <td>${espId.nombre}</td>
+                    <td>Piso: ${desp.piso} Puerta:${desp.puerta}</td>
+                    <td class="regEnt">
+                      <button type="submit" class="citaIcono2 oculta">
+                          <img data-id="${cita.id} " src="../img/editar.png" alt="icono editar cita">
+                      </button>   
+                    </td>
+                  </tr>
+                  `
+                  citas.innerHTML=html;
+                }   
                 
-              
-              
-            });
-              
+              }
+            }
+              if(cita.idPaciente == usu.id){
+                doThat(cita);
+              }
             })
+          })
       }
     }
   }else if(crearVer.dataset.id === "crear"){
@@ -394,6 +402,7 @@ async function Inicio(){
 
 }
 
+let idPac = null;
 window.addEventListener('DOMContentLoaded', async () => {
   onAuthStateChanged(auth, (user) => {
     if (user != null) {
