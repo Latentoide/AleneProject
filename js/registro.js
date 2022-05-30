@@ -316,9 +316,10 @@ async function register(tabl){
                     sendEmailVerification(user).then(() =>{
                         if(form.dataset.id === "doctor"){
                             addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, numeroEsp, true, tabl);
-                            signInWithEmailAndPassword(auth, "alenehospital@gmail.com", "adminA6")
+                            signInWithEmailAndPassword(auth, "alenehospital@gmail.com", "admin78?")
                             .then((userCredential) => {
                                 MSJOK();
+                                window.location.assign("registroDoctor.html");
                             })
                             .catch((error) => {
                                 const errorCode = error.code;
@@ -328,9 +329,11 @@ async function register(tabl){
                             
                         }else{
                             if(form.dataset.id === "recepcionista"){
-                                signInWithEmailAndPassword(auth, "alenehospital@gmail.com", "adminA6")
+                                addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, 0, false, tabl);
+                                signInWithEmailAndPassword(auth, "alenehospital@gmail.com", "admin78?")
                                 .then((userCredential) => {
                                     MSJOK();
+                                    window.location.assign("registroRecepcionista.html");
                                 })
                                 .catch((error) => {
                                     const errorCode = error.code;
@@ -340,6 +343,7 @@ async function register(tabl){
                                 
                             }else{
                                 addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, 0, false, tabl);
+                                window.location.assign("verCitas.html");
                             }
                         }
 

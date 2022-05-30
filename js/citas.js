@@ -154,6 +154,76 @@ async function Inicio(){
   if(crearVer.dataset.id === "ver"){
     if(quienEs == "paciente"){
       console.log("ver");
+      /*if(isOn){
+        MSJCUENTA();
+        let a = `<option selected>Doctor</option>`;
+        selectdoctor.innerHTML = a;
+        onGetDoctores((querySnapshot) => {
+          let html ='';
+          //Coger todos los datos de una lista
+          querySnapshot.forEach(doc =>{
+              const doctor = doc.data();
+                  html += `
+                    <option>${doctor.nombre} ${doctor.apellidos}</option>
+                  `
+              selectdoctor.innerHTML=html;
+          })
+          let a = `
+          <option selected>Doctor</option>
+        `
+          selectdoctor.innerHTML+=a;
+        })
+
+        let idPac = null;
+        getSmth("paciente", "email", email)
+        getWithQ((snapshot) => {
+          snapshot.docs.forEach((doc) => {
+            idPac = doc.data();
+          })
+        })
+          onGetCitas((querySnapshot) =>{
+            querySnapshot.forEach(doc =>{
+              cita = doc.data();
+
+                let docId = null;
+                let espId = null;
+                getSmth("doctor", "id",cita.idDoc);
+                getWithQ((snapshot) => {
+                  snapshot.docs.forEach((doc) => {
+                    docId = doc.data();
+                  })
+                  getSmth("especialidad", "id",docId.idEspecialidad);
+                  console.log(cita);
+                  getWithQ((snapshot) => {
+                    snapshot.docs.forEach((doc) => {
+                      espId = doc.data();
+                    })
+                    if(cita.fecha >= date){
+                        html += `
+                        <tr>
+                          <td scope="row">${cita.fecha} ${cita.hora}</td>
+                          <td>${docId.nombre}</td>
+                          <td>${espId.nombre}</td>
+                          <td>texto plano</td>
+                          <td class="regEnt">
+                            <button type="submit" class="citaIcono2 oculta">
+                                <img data-id="${cita.id} " src="../img/editar.png" alt="icono editar cita">
+                            </button>   
+                          </td>
+                        </tr>
+                        `
+                        citas.innerHTML=html;
+                      }
+                  })
+                  
+                });   
+              
+              
+            });
+              
+            })
+      }*/
+      console.log("ver");
       if(isOn){
         MSJCUENTA();
         let a = `<option selected>Doctor</option>`;
@@ -180,46 +250,49 @@ async function Inicio(){
           snapshot.docs.forEach((doc) => {
             idPac = doc.data();
           })
-
         })
           onGetCitas((querySnapshot) =>{
             querySnapshot.forEach(doc =>{
               cita = doc.data();
-              if(parseInt(cita.idPaciente) == parseInt(idPac.id)){
+
                 let docId = null;
                 let espId = null;
-                getSmth("doctor", "id",cita.idDoc);
-                console.log(cita.id)
-                getWithQ((snapshot) => {
-                  snapshot.docs.forEach((doc) => {
-                    docId = doc.data();
-                  })
-                  getSmth("especialidad", "id",docId.idEspecialidad);
+                if(cita.fecha >= date){
+                  getSmth("doctor", "id",cita.idDoc);
                   getWithQ((snapshot) => {
                     snapshot.docs.forEach((doc) => {
-                      espId = doc.data();
+                      docId = doc.data();
+                      getSmth("especialidad", "id",docId.idEspecialidad);
+                    console.log(cita);
+                    getWithQ((snapshot) => {
+                      snapshot.docs.forEach((doc) => {
+                        espId = doc.data();
+                        a();
+                      })
                       
                     })
-                    if(cita.fecha >= date){
-                        html += `
-                        <tr>
-                          <td scope="row">${cita.fecha} ${cita.hora}</td>
-                          <td>${docId.nombre}</td>
-                          <td>${espId.nombre}</td>
-                          <td>texto plano</td>
-                          <td class="regEnt">
-                            <button type="submit" class="citaIcono2 oculta">
-                                <img data-id="${cita.id} " src="../img/editar.png" alt="icono editar cita">
-                            </button>   
-                          </td>
-                        </tr>
-                        `
-                        citas.innerHTML=html;
-                      }
-                  })
+                    })
+                  });
+                  function a (){
+                    html += `
+                    <tr>
+                      <td scope="row">${cita.fecha} ${cita.hora}</td>
+                      <td>${docId.nombre}</td>
+                      <td>${espId.nombre}</td>
+                      <td>texto plano</td>
+                      <td class="regEnt">
+                        <button type="submit" class="citaIcono2 oculta">
+                            <img data-id="${cita.id} " src="../img/editar.png" alt="icono editar cita">
+                        </button>   
+                      </td>
+                    </tr>
+                    `
+                    citas.innerHTML=html;
+                  }   
                   
-                });   
-              }
+                }
+                
+              
               
             });
               
