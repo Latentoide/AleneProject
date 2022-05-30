@@ -15,7 +15,7 @@ import { getFirestore,
     orderBy,
     limit 
  } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-firestore.js";
- import { getAuth, updatePassword, sendEmailVerification, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js";
+ import { getAuth, updatePassword,signInWithEmailAndPassword,  sendEmailVerification, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.7.0/firebase-auth.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -34,7 +34,7 @@ import { getFirestore,
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
+let q = null;
 const db = getFirestore();
 
 const auth = getAuth();
@@ -43,59 +43,127 @@ export const getOne = (tabl, id) => {
     q = query(collection(db, tabl), where( "id","==", id))
 }
 
-const form = document.getElementById("form-changePass");
+export const getWithQ = (callback) => {
+    onSnapshot(q, callback);
+  }
+  
+
+export const getSmth = (tabla, campo, nomrbeEsp) => {
+    q = query(collection(db, tabla), where( campo,"==", nomrbeEsp))
+}
+
+export const getUsu = (tabla, nomrbeEsp, pass) => {
+    q = query(collection(db, tabla), where( "usuario","==", nomrbeEsp), where( "email","==", pass))
+}
+
+
+const form = document.getElementById("task-form");
 let storeId = "";
 window.addEventListener('DOMContentLoaded', async () => {
-    onGetPacientes((querySnapshot) => {
-        let html ='';
-        //Coger todos los datos de una lista
-        querySnapshot.forEach(doc =>{
-            const paciente = doc.data();
-            html += `
-                <div>
-                    <h3>${paciente.nombre}</h3>
-                    <p>${paciente.apellidos}</p>
-                    <p>${paciente.id}</p>
-                    <button class='btn-delete' data-id="${doc.id}">Delete</button>
-                    <button class='btn-edit' data-id="${doc.id}">Edit</button>
-                </div>
-            `
-        })
 
-        taskCont.innerHTML=html;
-
-        const btnDelete = taskCont.querySelectorAll('.btn-delete');
-        // borrar un dato de una lista
-        btnDelete.forEach(btn => {
-            btn.addEventListener('click', ({target:{dataset}}) => {
-                deleteTask(dataset.id, "paciente");
-            })
-        })
-
-        const btnEdit = taskCont.querySelectorAll('.btn-edit');
-        btnDelete.forEach(btn => {
-            btn.addEventListener('click', async  ({target:{dataset}}) => {
-                const doc = await getTask(dataset.id);
-                form['usuario'].value = doc.data.usuario;
-                form['contrasenya'].value = doc.data.contrasenya;
-                storeId = dataset.id;
-            })
-        })
-    })
 })
-
-form.addEventListener("submit", () => {
-    let newPassword = form['newPass'].value;
-    updatePassword(user, newPassword).then(() => {
-        MSJOK();
-      }).catch((error) => {
-       MSJERROR();
-      });
-
-      updateTask(storeId, {
-        usario: form['usuario'].value,
-        contrasenya : form['contrasenya'].value
+form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    getUsu(form.dataset.id, form["usuario"].value, form["email"].value);
+    let usu = null;
+    getWithQ((snapshot) => {
+        snapshot.docs.forEach((doc) => {
+          usu = doc;
+        })
+        let contadorMin = 0;
+        let contadorMay = 0;
+        let contadorNum = 0;
+        let contadorSim = 0;
+        let haveIt = false;
+        let contra = form['contrasenyaReg'].value;
+        if(form['contrasenyaReg'].value == form['contrasenyaRep'].value){
+            if(form['contrasenyaReg'].value == form['contrasenyaRep'].value){
+                for (let index = 0; index < contra.length; index++) {
+                    
+                    var letra=contra.charAt(index);
+                    if(letra.match(/[a-z]/)){
+                        contadorMin++;
+                    }else if(letra.match(/[A-Z]/)){
+                        contadorMay++;
+                    }else if(letra.match(/[0-9]/)){
+                        contadorNum++;
+                    }else if(letra==="$"||"!"||"%"||"#"||"="||"?"||"^"||"<"||">"||"-"||"@"){
+                        contadorSim++;
+                    }
+                }
+                if(contadorMay>0){
+                    if(contadorMin>0){
+                        if(contadorNum>0){
+                            if(contadorSim>0){
+                                haveIt =true;
+                            }
+                        }
+                    }
+                }
+                    
+                if(haveIt){
+                    let newPassword = form['contrasenyaReg'].value;
+                    let user;
+                    signInWithEmailAndPassword(auth, usu.data().email, usu.data().contrasenya)
+                    .then((userCredential) => {
+                        user = userCredential.user;
+                        MSJOK();
+                    })
+                    .catch((error) => {
+                        MSJERROR();
+                    });
+                    updatePassword(user, newPassword).then(() => {
+                        MSJOK();
+                        if(form.dataset.id === "paciente"){
+                            updateTask(usu.id, {
+                                direccion : usu.direccion,
+                                email : usu.email,
+                                id : usu.id,
+                                nombre : usu.nombre,
+                                poblacion : usu.poblacion,
+                                provincia : usu.provincia,
+                                telefono : usu.provincia,
+                                apellidos : usu.apellidos,
+                                usario: usu.usuario,
+                                contrasenya : form['contrasenya'].value
+                            }).catch((error) => {
+                            MSJERROR();
+                            });
+                        }
+                        else if(form.dataset.id === "admin"){
+                            updateTask(usu.id, {
+                                email : usu.email,
+                                usario: usu.usuario,
+                                contrasenya : form['contrasenya'].value
+                            }).catch((error) => {
+                            MSJERROR();
+                            });
+                        }else if(form.dataset.id === "doctor"){
+                            updateTask(usu.id, {
+                                direccion : usu.direccion,
+                                email : usu.email,
+                                id : usu.id,
+                                nombre : usu.nombre,
+                                poblacion : usu.poblacion,
+                                provincia : usu.provincia,
+                                telefono : usu.provincia,
+                                apellidos : usu.apellidos,
+                                usario: usu.usuario,
+                                idEspecialidad : usu.idEspecialidad,
+                                contrasenya : form['contrasenya'].value
+                            }).catch((error) => {
+                            MSJERROR();
+                            });
+                        }
+            
+                    })
+                }else{
+                    MSJCONT();
+                }
+            }
+        }
     })
+    
 })
 
 const MSJOK = () =>{
@@ -110,6 +178,14 @@ const MSJERROR = () =>{
     Swal.fire(
         'Oops!',
         'Lo siento el password no fue guardado correctamente',
+        'error'
+    )
+}
+
+const MSJCONT = () =>{
+    Swal.fire(
+        'Oops!',
+        'La contraseña tiene que tener al menos 8 caracteres, 1 mayúsucla, 1 minúsucla, 1 número, 1 simbolo como estos = "$!%#=?^<>-"',
         'error'
     )
 }

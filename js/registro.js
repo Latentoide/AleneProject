@@ -191,7 +191,7 @@ const MSJERROR = () =>{
 const MSJCONT = () =>{
     Swal.fire(
         'Oops!',
-        'La contraseña tiene que tener al menos 8 caracteres, 1 mayúsucla, 1 minúsucla, 1 número, 1 simbolo como estos = "$@$!%*?&"',
+        'La contraseña tiene que tener al menos 8 caracteres, 1 mayúsucla, 1 minúsucla, 1 número, 1 simbolo como estos = "$!%#=?^<>-"',
         'error'
     )
 }
@@ -233,22 +233,50 @@ form.addEventListener('submit', async (e) =>{
                     register("recepcionista");
                 });
         }else{
-            console.log(regex.test(contrasenya));
-            //if(regex.test(contrasenya) == true){
+            let contadorMin = 0;
+            let contadorMay = 0;
+            let contadorNum = 0;
+            let contadorSim = 0;
+            let haveIt = false;
                 cont = form['contrasenyaReg'].value;
                 contRep = form['contrasenyaRep'].value;
                 if(cont === contRep){
-                    getLastOf("paciente");
-                    getWithQ((snapshot) =>{
-                        snapshot.docs.forEach((doc) => {
-                            numeroId = doc.data().id +1;
-                        })
-                        register("paciente");
-                    });
+                    for (let index = 0; index < cont.length; index++) {
+                    
+                        var letra=cont.charAt(index);
+                        if(letra.match(/[a-z]/)){
+                            contadorMin++;
+                        }else if(letra.match(/[A-Z]/)){
+                            contadorMay++;
+                        }else if(letra.match(/[0-9]/)){
+                            contadorNum++;
+                        }else if(letra==="$"||"!"||"%"||"#"||"="||"?"||"^"||"<"||">"||"-"||"@"){
+                            contadorSim++;
+                        }
+                    }
+                    if(contadorMay>0){
+                        if(contadorMin>0){
+                            if(contadorNum>0){
+                                if(contadorSim>0){
+                                    haveIt =true;
+                                }
+                            }
+                        }
+                    }
+                    if(haveIt){
+                        getLastOf("paciente");
+                        getWithQ((snapshot) =>{
+                            snapshot.docs.forEach((doc) => {
+                                numeroId = doc.data().id +1;
+                            })
+                            register("paciente");
+                        });
+                    }else{
+                        MSJCONT();
+                    }
+
                 }
-            //}else{
-                //MSJCONT();
-            //}
+
         }
         
         form.reset()

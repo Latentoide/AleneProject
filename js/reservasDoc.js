@@ -209,7 +209,6 @@ btnRecargar.addEventListener("click", (e) => {
   e.preventDefault();
   const btnChange = citas.querySelectorAll('.citaIcono2');
       btnChange.forEach(btn => {
-        observacionChange.classList.remove('oculta');
           let theSamebool = false;
           if(!theSamebool){
               getSmth("cita", "id", parseInt(btn.dataset.cita));
@@ -227,36 +226,43 @@ btnRecargar.addEventListener("click", (e) => {
                           let cita = null;
                           getWithQ((snapshot) => {
                               snapshot.docs.forEach((doc) => {
-                                  cita = doc.data();
+                                  cita = doc;
                               })
 
-                              getSmth("paciente", "id", cita.idPaciente);
+                              getSmth("paciente", "id", cita.data().idPaciente);
                               let paciente = null;
                               getWithQ((snapshot) => {
                                 snapshot.docs.forEach((doc) => {
                                   paciente = doc.data();
                                 })
                                 let html = `
-                                <div class="row justify-content-center">
-                                  <div class="col-2 h2">CITA nº</div>
-                                  <div class="col-1 h2">${cita.id}</div>
-                                </div>
-                      
-                                <div class="ptb">
-                                  <div class="row justify-content-center">
-                                    <div class="col-5">FECHA : ${cita.fecha} HORA : ${cita.hora}</div>
-                                    <div class="col-4">PACIENTE : ${paciente.nombre} ${paciente.apellidos}</div>
-                                  </div>
-                                </div>
-                                
+
                                 
                               `
                               if(!theTrue){
-                                  console.log(form);
-                                  observacionChange.innerHTML = html;
-                                  realice();
+                                  observacionChange.classList.remove('oculta');
+
+                                  const numCita = document.getElementById("numCita");
+                                  const fechaHora = document.getElementById("fechaHora");
+                                  const pacienteAp = document.getElementById("pacienteAp");
+                                  let as = `
+                                    ${cita.data().id}
+                                  `;
+                                  numCita.innerHTML = as;
+
+                                  as = `
+                                    FECHA : ${cita.data().fecha} HORA : ${cita.data().hora}
+                                  `;
+                                  fechaHora.innerHTML = as;
+                                  as = `
+                                  PACIENTE : ${paciente.nombre} ${paciente.apellidos}
+                                  `;
+                                  laCitaNormal = cita.data();
+                                  elDiCita = cita.id;
+                                  pacienteAp.innerHTML = as;
                                   theTrue =true;
                                   theSamebool = true;
+ 
                               }
                               })
                           })                                  
@@ -266,53 +272,50 @@ btnRecargar.addEventListener("click", (e) => {
           }
   })
 })
-function realice(){
-  form = document.getElementById("reg-form");
-  form.addEventListener("sumbit", async (e)=>{
+let laCitaNormal = null;
+let elDiCita = null;
+const theButton = document.getElementById("buttonChange");
+const elForm = document.getElementById("texto");
+  theButton.addEventListener("click", async (e)=>{
     e.preventDefault();
-    const theButton = document.getElementById("buttonChange");
-    const laCita = theButton.dataset.cita;
-    const idCita = theButton.dataset.id;
-  
-    laCita.observacion = form[exampleTextarea].value;
+    const laCita = laCitaNormal;
+    const idCita = elDiCita;
+    let laFor =  elForm.value
+    laCita.observacion = laFor;
+    console.log(laCita.observacion)
+    async function a(id, cita){
+      Swal.fire({
+          title: '¿Confirmar observacion?',
+          text: "No podrás revertir este proceso",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirmar!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              updateRes(id, {
+                  entrada : true,
+                  fecha : cita.fecha,
+                  hora : cita.hora,
+                  id : cita.id,
+                  idDoc : cita.idDoc,
+                  idPaciente : cita.idPaciente,
+                  observacion : cita.observacion,    
+                  }) ;
+              function ass (){
+                  Swal.fire(
+                      'Confirmado!',
+                      'Se ha registrado la observacion.',
+                      'success'
+                  )
+              }
+              ass();
+          }
+      })
+    }
     a(idCita, laCita);
   })
-}
-
-
-
-
-async function a(id, cita){
-  Swal.fire({
-      title: '¿Confirmar observacion?',
-      text: "No podrás revertir este proceso",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Confirmar!'
-  }).then((result) => {
-      if (result.isConfirmed) {
-          updateRes(id, {
-              entrada : true,
-              fecha : cita.fecha,
-              hora : cita.hora,
-              id : cita.id,
-              idDoc : cita.idDoc,
-              idPaciente : cita.idPaciente,
-              observacion : cita.observacion,    
-              }) ;
-          function ass (){
-              Swal.fire(
-                  'Confirmado!',
-                  'Se ha registrado la observacion.',
-                  'success'
-              )
-          }
-          ass();
-      }
-  })
-}
 
 window.addEventListener('DOMContentLoaded', async () => {
     onAuthStateChanged(auth, (user) => {

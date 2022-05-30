@@ -128,18 +128,30 @@
         </citas>
 
         <datos-cita id="observaciopCita" class="oculta">
+          <div class="row justify-content-center">
+            <div class="col-2 h2">CITA nº</div>
+            <div id="numCita" class="col-1 h2"></div>
+          </div>
+
+          <div class="ptb">
+            <div class="row justify-content-center">
+              <div id="fechaHora" class="col-5">FECHA : ${cita.fecha} HORA : ${cita.hora}</div>
+              <div id="pacienteAp" class="col-4">PACIENTE : ${paciente.nombre} ${paciente.apellidos}</div>
+            </div>
+          </div>
+          
           <div class="row justify-content-around">
             <div class="col-10 justify-content-center solicitud">
                 <form data-id="despacho" id="reg-form">
                     <div class="form-group">
                       <div class="hstack">
                         <label for="exampleTextarea" class="form-label mt-4 width-xl">OBSERVACIONES DE LA CITA</label>
-                        <textarea class="form-control gborder" id="exampleTextarea" rows="3"></textarea>
+                        <textarea id="texto" class="form-control gborder" rows="3"></textarea>
                       </div>
                     </div>
 
                     <div class="vstack gap-2 col-md-6 mx-auto btn-mt">
-                      <button type="submit" class="btn btn-outline-info">FINALIZAR CITA</button>
+                      <button id="buttonChange" type="button" class="btn btn-outline-info">FINALIZAR CITA</button>
                     </div>
                 </form>
             </div>

@@ -148,7 +148,8 @@ async function saberQuien(){
   });
 
 }
-
+let cita = null;
+let html = null;
 async function Inicio(){
   if(crearVer.dataset.id === "ver"){
     if(quienEs == "paciente"){
@@ -179,47 +180,50 @@ async function Inicio(){
           snapshot.docs.forEach((doc) => {
             idPac = doc.data();
           })
-          getSmth("cita", "idPaciente", idPac.id);
-          let cita = null;
-          let html = null;
-          getWithQ((snapshot) => {
-            snapshot.docs.forEach((doc) => {
-              cita = doc.data();
-            });
-              getSmth("doctor", "id",cita.idDoc);
-              let docId = null;
-              let espId = null;
-              getWithQ((snapshot) => {
-                snapshot.docs.forEach((doc) => {
-                  docId = doc.data();
-                })
 
-                getSmth("especialidad", "id",docId.idEspecialidad);
+        })
+          onGetCitas((querySnapshot) =>{
+            querySnapshot.forEach(doc =>{
+              cita = doc.data();
+              if(parseInt(cita.idPaciente) == parseInt(idPac.id)){
+                let docId = null;
+                let espId = null;
+                getSmth("doctor", "id",cita.idDoc);
+                console.log(cita.id)
                 getWithQ((snapshot) => {
                   snapshot.docs.forEach((doc) => {
-                    espId = doc.data();
+                    docId = doc.data();
                   })
-                  if(cita.fecha >= date){
-                    html += `
-                    <tr>
-                      <td scope="row">${cita.fecha} ${cita.hora}</td>
-                      <td>${docId.nombre}</td>
-                      <td>${espId.nombre}</td>
-                      <td>texto plano</td>
-                      <td class="regEnt">
-                        <button type="submit" class="citaIcono2 oculta">
-                            <img data-id="${cita.id} " src="../img/editar.png" alt="icono editar cita">
-                        </button>   
-                      </td>
-                    </tr>
-                    `
-                    citas.innerHTML=html;
-                  }
-                })
-              });   
+                  getSmth("especialidad", "id",docId.idEspecialidad);
+                  getWithQ((snapshot) => {
+                    snapshot.docs.forEach((doc) => {
+                      espId = doc.data();
+                      
+                    })
+                    if(cita.fecha >= date){
+                        html += `
+                        <tr>
+                          <td scope="row">${cita.fecha} ${cita.hora}</td>
+                          <td>${docId.nombre}</td>
+                          <td>${espId.nombre}</td>
+                          <td>texto plano</td>
+                          <td class="regEnt">
+                            <button type="submit" class="citaIcono2 oculta">
+                                <img data-id="${cita.id} " src="../img/editar.png" alt="icono editar cita">
+                            </button>   
+                          </td>
+                        </tr>
+                        `
+                        citas.innerHTML=html;
+                      }
+                  })
+                  
+                });   
+              }
+              
+            });
+              
             })
-            citas.innerHTML=html;
-          })
       }
     }
   }else if(crearVer.dataset.id === "crear"){
@@ -370,9 +374,30 @@ form.addEventListener("submit", async (e) => {
         l = doc.data();
         console.log(l);
     })
-    addCita(dia.value,horas.value, citaId, theDoc.id, l.id, null);
+    async function a(){
+      Swal.fire({
+          title: '¿Confirmar cita?',
+          text: "La cita se hara para el dia " + dia.value +" a la hora " + horas.value + " con el doctor " + theDoc.nombre + " " + theDoc.apell + ". No podrás revertir este proceso.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirmar!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              addCita(dia.value,horas.value, citaId, theDoc.id, l.id, null);
+              function ass (){
+                  Swal.fire(
+                      'Perfecto!',
+                      'Se ha creado la cita.',
+                      'success'
+                  )
+              }
+              ass();
+          }
+      })
+    }
+    a();
+
   });
-
-    //queda hacer select de doctores disponibles
-
 })

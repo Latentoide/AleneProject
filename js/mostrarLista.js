@@ -66,13 +66,14 @@ var date = today.getFullYear()+'-'+(today.getMonth()+1).toString().padStart(2,"0
 const lista = document.getElementById("lista");
 
 window.addEventListener("DOMContentLoaded", async ()=>{
-  getCitas();
-  getWithQ((snapshot) => {
-    let cita = null;
-    snapshot.docs.forEach((doc) => {
+  let html = "";
+  let cita = null;
+  onGetCitas((querySnapshot) =>{
+    //Coger todos los datos de una lista
+    querySnapshot.forEach(doc =>{
       cita = doc.data();
-    })
-    let html = "";
+      console.log(cita.id)
+      if(cita.fecha === date){
         getSmth("doctor", "id", cita.idDoc);
         let elDoctor = null;
         getWithQ((snapshot) => {
@@ -85,20 +86,19 @@ window.addEventListener("DOMContentLoaded", async ()=>{
                 snapshot.docs.forEach((doc) => {
                     laEspecialidad = doc.data();
                 })
+  
                 getSmth("paciente", "id", cita.idPaciente);
                 let elPaciente = null;
                 getWithQ((snapshot) => {
                     snapshot.docs.forEach((doc) => {
                         elPaciente = doc.data();
                     })
-                    if(cita.fecha == date){
                       getSmth("solicita_despacho", "fecha", date);
                       let elSolicita = null;
                       getWithQ((snapshot) => {
                           snapshot.docs.forEach((doc) => {
                               elSolicita = doc.data();
                           })
-                          console.log(elSolicita.idDespacho);
                           getSmth("despacho", "id", elSolicita.idDespacho);
                           let elDespacho = null;
                           getWithQ((snapshot) => {
@@ -116,12 +116,16 @@ window.addEventListener("DOMContentLoaded", async ()=>{
                               lista.innerHTML=html;
                           })  
                         })
-                    }
-
+                    
+  
                   })
-
+  
             })
         })
-      })
-  })
+      }
+    })
 
+    
+    
+  })
+})
