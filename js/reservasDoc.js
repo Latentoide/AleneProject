@@ -52,6 +52,11 @@ export const getOne = () => {
   q = query(collection(db, "paciente"), where( "email","==", email))
 }
 
+export const updateRes = (id, newData) => {
+  updateDoc(doc(db, "cita",id), newData)
+}
+
+
 export const saber = (tbl) => {
   q = query(collection(db, tbl), where( "email","==", email))
 }
@@ -157,31 +162,31 @@ async function saberQuien(){
             let html = null;
             getWithQ((snapshot) => {
               snapshot.docs.forEach((doc) => {
-                cita = doc.data();
+                cita = doc;
               });
-                getSmth("paciente", "id",cita.idPaciente);
+                getSmth("paciente", "id",cita.data().idPaciente);
                 let docId = null;
                 let espId = null;
                 getWithQ((snapshot) => {
                   snapshot.docs.forEach((doc) => {
                     docId = doc.data();
                   })
-
                   getSmth("especialidad", "id",idPac.idEspecialidad);
                   getWithQ((snapshot) => {
                     snapshot.docs.forEach((doc) => {
                       espId = doc.data();
                     })
-
-                    if(cita.fecha == date){
+                    console.log(cita.data().fecha);
+                    console.log(date);
+                    if(cita.data().fecha === date){
                       html += `
                       <tr>
-                        <td scope="row">${cita.fecha}</td>
-                        <td>${cita.hora}</td>
+                        <td scope="row">${cita.data().fecha}</td>
+                        <td>${cita.data().hora}</td>
                         <td>${docId.nombre}</td>
                         <td class="regEnt">
-                          <button type="submit" class="citaIcono2 oculta">
-                              <img data-id="${cita.id} " src="../img/editar.png" alt="icono editar cita">
+                          <button data-id="${cita.id}" data-cita="${cita.data().id}" type="submit" class="citaIcono2 oculta">
+                              <img src="../img/editar.png" alt="icono editar cita">
                           </button>   
                         </td>
                       </tr>
@@ -196,6 +201,117 @@ async function saberQuien(){
         }
       }
     }
+}
+let form = null;
+const observacionChange = document.getElementById("observaciopCita");
+const btnRecargar = document.getElementById("recarga");
+btnRecargar.addEventListener("click", (e) => {
+  e.preventDefault();
+  const btnChange = citas.querySelectorAll('.citaIcono2');
+      btnChange.forEach(btn => {
+        observacionChange.classList.remove('oculta');
+          let theSamebool = false;
+          if(!theSamebool){
+              getSmth("cita", "id", parseInt(btn.dataset.cita));
+              let cita = null;
+              getWithQ((snapshot) => {
+                  snapshot.docs.forEach((doc) => {
+                      cita = doc.data();
+                  })
+                  if(cita.entrada){
+                      btn.classList.remove('oculta')
+                      btn.addEventListener('click',  (s) => {
+                          s.preventDefault();
+                          let theTrue = false;
+                          getSmth("cita", "id", parseInt(btn.dataset.cita));
+                          let cita = null;
+                          getWithQ((snapshot) => {
+                              snapshot.docs.forEach((doc) => {
+                                  cita = doc.data();
+                              })
+
+                              getSmth("paciente", "id", cita.idPaciente);
+                              let paciente = null;
+                              getWithQ((snapshot) => {
+                                snapshot.docs.forEach((doc) => {
+                                  paciente = doc.data();
+                                })
+                                let html = `
+                                <div class="row justify-content-center">
+                                  <div class="col-2 h2">CITA nº</div>
+                                  <div class="col-1 h2">${cita.id}</div>
+                                </div>
+                      
+                                <div class="ptb">
+                                  <div class="row justify-content-center">
+                                    <div class="col-5">FECHA : ${cita.fecha} HORA : ${cita.hora}</div>
+                                    <div class="col-4">PACIENTE : ${paciente.nombre} ${paciente.apellidos}</div>
+                                  </div>
+                                </div>
+                                
+                                
+                              `
+                              if(!theTrue){
+                                  console.log(form);
+                                  observacionChange.innerHTML = html;
+                                  realice();
+                                  theTrue =true;
+                                  theSamebool = true;
+                              }
+                              })
+                          })                                  
+                       })
+                  }
+              })  
+          }
+  })
+})
+function realice(){
+  form = document.getElementById("reg-form");
+  form.addEventListener("sumbit", async (e)=>{
+    e.preventDefault();
+    const theButton = document.getElementById("buttonChange");
+    const laCita = theButton.dataset.cita;
+    const idCita = theButton.dataset.id;
+  
+    laCita.observacion = form[exampleTextarea].value;
+    a(idCita, laCita);
+  })
+}
+
+
+
+
+async function a(id, cita){
+  Swal.fire({
+      title: '¿Confirmar observacion?',
+      text: "No podrás revertir este proceso",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Confirmar!'
+  }).then((result) => {
+      if (result.isConfirmed) {
+          updateRes(id, {
+              entrada : true,
+              fecha : cita.fecha,
+              hora : cita.hora,
+              id : cita.id,
+              idDoc : cita.idDoc,
+              idPaciente : cita.idPaciente,
+              observacion : cita.observacion,    
+              }) ;
+          function ass (){
+              Swal.fire(
+                  'Confirmado!',
+                  'Se ha registrado la observacion.',
+                  'success'
+              )
+          }
+          ass();
+      }
+  })
 }
 
 window.addEventListener('DOMContentLoaded', async () => {

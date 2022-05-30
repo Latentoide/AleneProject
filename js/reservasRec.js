@@ -468,6 +468,7 @@ btnRecargar.addEventListener("click", (e) => {
                                     theTrue =true;
                                     theSamebool = true;
                                     as = true;
+                                    myTable.classList.add("loaded");
                                 }
                             })                                  
                          })
@@ -476,13 +477,13 @@ btnRecargar.addEventListener("click", (e) => {
             }
     })
 })
-
+const myTable = document.getElementById("recTable");
 window.addEventListener('DOMContentLoaded', async () => {
     onAuthStateChanged(auth, (user) => {
       if (user != null) {
         user = auth.currentUser;
         email = user.email;
-        if(!as){
+        if(!as || !myTable.classList.contains("loaded")){
             saberQuien();
         }
       } else {
