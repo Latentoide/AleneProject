@@ -7,6 +7,10 @@ main {
     color: white;
 }
 
+.lessmargin {
+    margin-left: -60px;
+}
+
 .iniSes {
     margin-top: 20px;
 }
