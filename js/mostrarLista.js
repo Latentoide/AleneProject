@@ -123,5 +123,9 @@ window.addEventListener("DOMContentLoaded", async ()=>{
             })
         })
       })
-  })
 
+      setTimeout(refrescar, 60000);
+      function refrescar(){
+        location.reload();
+      }
+  })
