@@ -343,7 +343,17 @@ async function register(tabl){
                                 
                             }else{
                                 addPacDoc(nombre, apellido, email, telf, dir, pob, pro, pais, usu, cont, numeroId, 0, false, tabl);
-                                window.location.assign("verCitas.html");
+                                signInWithEmailAndPassword(auth, email, cont)
+                                .then((userCredential) => {
+                                    MSJOK();
+                                    window.location.assign("verCitas.html");
+                                })
+                                .catch((error) => {
+                                    const errorCode = error.code;
+                                    const errorMessage = error.message;
+                                    MSJERROR();
+                                });
+
                             }
                         }
 
